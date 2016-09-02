@@ -64,7 +64,7 @@ public class WereldLaderImpl implements WereldLader {
         }
 
         private ArrayList<String> parseMapStrings(ArrayList<String> file) {
-            if (file.get(0).matches("\\d*,\\d*")) { // check if formatting matches: number, number
+            if (file.get(0).matches("\\d*,\\d*")) { // check if formatting matches: number,number
                 String[] dimensions = file.get(0).split(",");
                 int mapHeight = Integer.parseInt(dimensions[1]);
                 ArrayList<String> mapStrings = new ArrayList<>();
@@ -105,9 +105,9 @@ public class WereldLaderImpl implements WereldLader {
 
         private Kaart getKaart() {
             Kaart kaart = new Kaart(mapStrings.get(0).length(), mapStrings.size());
-            for (int x = 0; x < mapStrings.size(); x++) {
-                for (int y = 0; y < mapStrings.get(x).length(); y++) {
-                    new Terrein(kaart, Coordinaat.op(x, y), new TerreinTypeParser().parse(mapStrings.get(x).charAt(y)));
+            for (int y = 0; y < mapStrings.size(); y++) {
+                for (int x = 0; x < mapStrings.get(y).length(); x++) {
+                    new Terrein(kaart, Coordinaat.op(x, y), new TerreinTypeParser().parse(mapStrings.get(y).charAt(x)));
                 }
             }
             return kaart;
