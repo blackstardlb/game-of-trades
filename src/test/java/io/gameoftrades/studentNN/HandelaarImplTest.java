@@ -24,6 +24,7 @@ import io.gameoftrades.model.markt.Handelsplan;
 import io.gameoftrades.model.markt.actie.Actie;
 import io.gameoftrades.model.markt.actie.BeweegActie;
 import io.gameoftrades.model.markt.actie.HandelsPositie;
+import io.gameoftrades.student34.HandelaarImpl;
 
 /**
  * Een verzameling eenvoudige tests om te kijken of de handelaar werkt.

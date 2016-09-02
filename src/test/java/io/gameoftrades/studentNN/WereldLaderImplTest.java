@@ -12,6 +12,7 @@ import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.TerreinType;
 import io.gameoftrades.model.lader.WereldLader;
 import io.gameoftrades.model.markt.HandelType;
+import io.gameoftrades.student34.WereldLaderImpl;
 
 /**
  * Handige test om de WereldLader implementatie te testen.

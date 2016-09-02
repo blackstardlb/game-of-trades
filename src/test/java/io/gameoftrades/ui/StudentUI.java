@@ -1,6 +1,6 @@
 package io.gameoftrades.ui;
 
-import io.gameoftrades.studentNN.HandelaarImpl;
+import io.gameoftrades.student34.HandelaarImpl;
 
 /**
  * Toont de visuele gebruikersinterface.
