@@ -1,4 +1,4 @@
-package io.gameoftrades.studentNN;
+package io.gameoftrades.student34;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,7 +12,6 @@ import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.TerreinType;
 import io.gameoftrades.model.lader.WereldLader;
 import io.gameoftrades.model.markt.HandelType;
-import io.gameoftrades.student34.WereldLaderImpl;
 
 /**
  * Handige test om de WereldLader implementatie te testen.
