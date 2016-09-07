@@ -11,6 +11,7 @@ import io.gameoftrades.model.markt.Markt;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class WereldLaderImpl implements WereldLader {
 
@@ -23,26 +24,23 @@ public class WereldLaderImpl implements WereldLader {
         //
         // TODO Laad de wereld!
         //
-        return new MapParser(resource).getWereld();
+        return new WorldParser(resource).getWereld();
     }
 
-    private class MapParser {
-        private ArrayList<String> cityStrings;
-        private ArrayList<String> marketStrings;
-        private ArrayList<String> mapStrings;
+    private class WorldParser {
+        private Kaart kaart;
+        private List<Stad> cities;
+        private Markt market;
 
-        MapParser(String resourceName) {
+        WorldParser(String resourceName) {
             ArrayList<String> file = readWorldFile(resourceName);
-            this.mapStrings = parseMapStrings(file);
-            this.cityStrings = parseCityStrings(file);
-            this.marketStrings = parseMarketStrings(file);
+            kaart = parseMapStrings(file).getKaart();
+            cities = parseCityStrings(file).getCities();
+            market = parseMarketStrings(file).getMarket();
         }
 
         Wereld getWereld() {
-            Kaart kaart = getKaart();
-            List<Stad> steden = getSteden();
-            Markt markt = getMarkt(steden);
-            return new Wereld(kaart, steden, markt);
+            return new Wereld(kaart, cities, market);
         }
 
         private ArrayList<String> readWorldFile(String name) {
@@ -53,7 +51,7 @@ public class WereldLaderImpl implements WereldLader {
                     String line;
                     ArrayList<String> file = new ArrayList<>();
                     while ((line = br.readLine()) != null) {
-                        file.add(line.replaceAll(" ", ""));
+                        file.add(line.replaceAll("\\s+$", ""));
                     }
                     return file;
                 } else {
@@ -64,117 +62,155 @@ public class WereldLaderImpl implements WereldLader {
             }
         }
 
-        private ArrayList<String> parseMapStrings(ArrayList<String> file) {
+        private MapParser parseMapStrings(ArrayList<String> file) {
             if (file.get(0).matches("\\d*,\\d*")) { // check if formatting matches: number,number
                 String[] dimensions = file.get(0).split(",");
                 int mapHeight = Integer.parseInt(dimensions[1]);
                 int mapWidth = Integer.parseInt(dimensions[0]);
                 ArrayList<String> mapStrings = new ArrayList<>();
                 if (file.size() >= mapHeight) {
-                    String regex = "[" + new TerreinTypeParser().getLetters() + "]{" + mapWidth + "}";
                     for (int i = 1; i <= mapHeight; i++) {
-                        if (file.get(i).matches(regex)) {
-                            mapStrings.add(file.get(i));
-                        } else {
-                            throw new IllegalArgumentException("FIle format error");
+                        mapStrings.add(file.get(i));
+                    }
+                    return new MapParser(mapWidth, mapHeight, mapStrings);
+                }
+            }
+            throw new IllegalArgumentException("Map formatting error");
+        }
+
+        private CityParser parseCityStrings(ArrayList<String> file) {
+            if (file.size() >= kaart.getHoogte() + 1) {
+                ArrayList<String> subArray = new ArrayList<>();
+
+                for (int i = kaart.getHoogte() + 1; i < file.size(); i++) {
+                    subArray.add(file.get(i));
+                }
+
+                if (isStringInt(subArray.get(0))) {
+                    int ammountOfCities = Integer.parseInt(subArray.get(0));
+                    subArray.remove(0);
+                    ArrayList<String> cityStrings = new ArrayList<>();
+                    if (subArray.size() >= ammountOfCities) {
+                        for (int i = 0; i < ammountOfCities; i++) {
+                            cityStrings.add(subArray.get(i));
                         }
-                    }
-                    return mapStrings;
-                } else {
-                    throw new IllegalArgumentException("Map height longer than file");
-                }
-            } else {
-                throw new IllegalArgumentException("Map width / height did not match formatting");
-            }
-        }
-
-        private ArrayList<String> parseCityStrings(ArrayList<String> file) {
-            int mapHeight = mapStrings.size();
-            if (isStringInt(file.get(mapHeight + 1))) {
-                int ammountOfCities = Integer.parseInt(file.get(mapHeight + 1));
-                ArrayList<String> cityStrings = new ArrayList<>();
-                for (int i = mapHeight + 2; i < mapHeight + 2 + ammountOfCities; i++) {
-                    cityStrings.add(file.get(i));
-                }
-                return cityStrings;
-            }
-            return null;
-        }
-
-        private ArrayList<String> parseMarketStrings(ArrayList<String> file) {
-            int mapHeight = mapStrings.size();
-            int ammountOfCities = cityStrings.size();
-            if (isStringInt(file.get(mapHeight + 2 + ammountOfCities))) {
-                int marktAmmount = Integer.parseInt(file.get(mapHeight + 2 + ammountOfCities));
-                ArrayList<String> marketStrings = new ArrayList<>();
-                if (file.size() >= mapHeight + 3 + ammountOfCities + marktAmmount) {
-                    for (int i = mapHeight + 3 + ammountOfCities; i < mapHeight + 3 + ammountOfCities + marktAmmount; i++) {
-                        marketStrings.add(file.get(i));
-                    }
-                    return marketStrings;
-                } else {
-                    throw new IllegalArgumentException("Map format error");
-                }
-            }
-            return null;
-        }
-
-        private Kaart getKaart() {
-            Kaart kaart;
-            if (mapStrings.size() > 0) {
-                kaart = new Kaart(mapStrings.get(0).length(), mapStrings.size());
-            } else {
-                kaart = new Kaart(0, 0);
-            }
-            for (int y = 0; y < mapStrings.size(); y++) {
-                for (int x = 0; x < mapStrings.get(y).length(); x++) {
-                    new Terrein(kaart, Coordinaat.op(x, y), new TerreinTypeParser().parse(mapStrings.get(y).charAt(x)));
-                }
-            }
-            return kaart;
-        }
-
-        private List<Stad> getSteden() {
-            List<Stad> steden = new ArrayList<>();
-            for (String string : cityStrings) {
-                steden.add(getStad(string));
-            }
-            return steden;
-        }
-
-        private Stad getStad(String string) {
-            String[] parts = string.split(",");
-            if (parts.length == 3 && isStringInt(parts[0]) && isStringInt(parts[1])) {
-                return new Stad(Coordinaat.op(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), parts[2]);
-            }
-            return null;
-        }
-
-        private Markt getMarkt(List<Stad> steden) {
-            List<Handel> handels = new ArrayList<>();
-            for (String string : marketStrings) {
-                handels.add(getHandel(string, steden));
-            }
-            return new Markt(handels);
-        }
-
-        private Handel getHandel(String string, List<Stad> steden) {
-            String[] parts = string.split(",");
-            if (parts.length == 4 && isStringInt(parts[3])) {
-                for (Stad stad : steden) {
-                    if (parts[0].equals(stad.getNaam())) {
-                        HandelType handelType = new HandelTypeParser().parse(parts[1]);
-                        return new Handel(stad, handelType, new Handelswaar(parts[2]), Integer.parseInt(parts[3]));
+                        return new CityParser(cityStrings);
                     }
                 }
-                throw new IllegalArgumentException("Stad " + parts[0] + " not found");
-            } else {
-                throw new IllegalArgumentException("Handel formatting error: " + string);
             }
+            throw new IllegalArgumentException("City format error");
+        }
+
+        private MarketParser parseMarketStrings(ArrayList<String> file) {
+            if (file.size() >= kaart.getHoogte() + cities.size() + 3) {
+                ArrayList<String> subArray = new ArrayList<>();
+
+                for (int i = kaart.getHoogte() + cities.size() + 2; i < file.size(); i++) {
+                    subArray.add(file.get(i));
+                }
+
+                subArray.forEach(System.out::println);
+                if (isStringInt(subArray.get(0))) {
+                    int ammountOfMarkets = Integer.parseInt(subArray.get(0));
+                    subArray.remove(0);
+                    ArrayList<String> marketStrings = new ArrayList<>();
+                    if (subArray.size() >= ammountOfMarkets) {
+                        for (int i = 0; i < ammountOfMarkets; i++) {
+                            marketStrings.add(subArray.get(i));
+                        }
+                        return new MarketParser(marketStrings, cities);
+                    }
+                }
+            }
+            throw new IllegalArgumentException("Market format error");
         }
 
         private boolean isStringInt(String string) {
             return string.matches("\\d+");
+        }
+
+        private class MapParser {
+            private Kaart kaart;
+
+            MapParser(int width, int height, ArrayList<String> mapTerrein) {
+                kaart = new Kaart(width, height);
+                for (String terreinString : mapTerrein) {
+                    checkLineMatchMapFormatting(terreinString, kaart.getBreedte());
+                }
+                this.addTerrein(mapTerrein);
+            }
+
+            private void addTerrein(ArrayList<String> mapTerrein) {
+                for (int y = 0; y < kaart.getHoogte(); y++) {
+                    for (int x = 0; x < kaart.getBreedte(); x++) {
+                        new Terrein(kaart, Coordinaat.op(x, y), new TerreinTypeParser().parse(mapTerrein.get(y).charAt(x)));
+                    }
+                }
+            }
+
+            private void checkLineMatchMapFormatting(String line, int mapWidth) {
+                String regex = "[" + new TerreinTypeParser().getLetters() + "]{" + mapWidth + "}";
+                if (!line.matches(regex)) {
+                    throw new IllegalArgumentException("Line format error: " + line);
+                }
+            }
+
+            public Kaart getKaart() {
+                return kaart;
+            }
+        }
+
+        private class CityParser {
+            private List<Stad> cities;
+
+            CityParser(ArrayList<String> cityStrings) {
+                cities = new ArrayList<>();
+                for (String cityString : cityStrings) {
+                    cities.add(parseStad(cityString));
+                }
+            }
+
+            private Stad parseStad(String string) {
+                String[] parts = string.split(",");
+                if (parts.length == 3 && isStringInt(parts[0]) && isStringInt(parts[1])) {
+                    return new Stad(Coordinaat.op(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), parts[2]);
+                }
+                throw new IllegalArgumentException("City format error" + string);
+            }
+
+            List<Stad> getCities() {
+                return cities;
+            }
+        }
+
+        private class MarketParser {
+            private Markt market;
+
+            MarketParser(ArrayList<String> marketStrings, List<Stad> cities) {
+                List<Handel> handels = new ArrayList<>();
+                for (String string : marketStrings) {
+                    handels.add(getHandel(string, cities));
+                }
+                market = new Markt(handels);
+            }
+
+            private Handel getHandel(String string, List<Stad> steden) {
+                String[] parts = string.split(",");
+                if (parts.length == 4 && isStringInt(parts[3])) {
+                    for (Stad stad : steden) {
+                        if (parts[0].equals(stad.getNaam())) {
+                            HandelType handelType = new HandelTypeParser().parse(parts[1]);
+                            return new Handel(stad, handelType, new Handelswaar(parts[2]), Integer.parseInt(parts[3]));
+                        }
+                    }
+                }
+                System.out.println(steden);
+                throw new IllegalArgumentException("Handel formatting error: " + string);
+            }
+
+            public Markt getMarket() {
+                return market;
+            }
         }
     }
 
