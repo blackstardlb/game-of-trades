@@ -71,7 +71,7 @@ public class WereldLaderImpl implements WereldLader {
                 int mapWidth = Integer.parseInt(dimensions[0]);
                 ArrayList<String> mapStrings = new ArrayList<>();
                 if (file.size() >= mapHeight) {
-                    String regex = "[ZRBGS]{" + mapWidth + "}";
+                    String regex = "[" + new TerreinTypeParser().getLetters() + "]{" + mapWidth + "}";
                     for (int i = 1; i <= mapHeight; i++) {
                         if (file.get(i).matches(regex)) {
                             mapStrings.add(file.get(i));
@@ -197,6 +197,14 @@ public class WereldLaderImpl implements WereldLader {
                 }
             }
             throw new IllegalArgumentException("TerreinType met char " + terreinChar + " bestaat niet");
+        }
+
+        String getLetters() {
+            StringBuilder sb = new StringBuilder();
+            for (TerreinType terreinType : TerreinType.values()) {
+                sb.append(terreinType.getLetter());
+            }
+            return sb.toString();
         }
     }
 }
