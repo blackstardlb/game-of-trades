@@ -23,26 +23,7 @@ public class WereldLaderImpl implements WereldLader {
         //
         // TODO Laad de wereld!
         //
-        try {
-            return new MapParser(readWorldFile(resource)).getWereld();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private ArrayList<String> readWorldFile(String name) throws IOException {
-        InputStream is = this.getClass().getResourceAsStream(name);
-        if (is != null) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line;
-            ArrayList<String> file = new ArrayList<>();
-            while ((line = br.readLine()) != null) {
-                file.add(line);
-            }
-            return file;
-        }
-        return null;
+        return new MapParser(resource).getWereld();
     }
 
     private class MapParser {
@@ -50,7 +31,8 @@ public class WereldLaderImpl implements WereldLader {
         private ArrayList<String> marketStrings;
         private ArrayList<String> mapStrings;
 
-        MapParser(ArrayList<String> file) {
+        MapParser(String resourceName) {
+            ArrayList<String> file = readWorldFile(resourceName);
             this.mapStrings = parseMapStrings(file);
             this.cityStrings = parseCityStrings(file);
             this.marketStrings = parseMarketStrings(file);
@@ -63,17 +45,47 @@ public class WereldLaderImpl implements WereldLader {
             return new Wereld(kaart, steden, markt);
         }
 
+        private ArrayList<String> readWorldFile(String name) {
+            InputStream is = this.getClass().getResourceAsStream(name);
+            try {
+                if (is != null) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    String line;
+                    ArrayList<String> file = new ArrayList<>();
+                    while ((line = br.readLine()) != null) {
+                        file.add(line.replaceAll(" ", ""));
+                    }
+                    return file;
+                } else {
+                    throw new IllegalArgumentException("File not found " + name);
+                }
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        }
+
         private ArrayList<String> parseMapStrings(ArrayList<String> file) {
             if (file.get(0).matches("\\d*,\\d*")) { // check if formatting matches: number,number
                 String[] dimensions = file.get(0).split(",");
                 int mapHeight = Integer.parseInt(dimensions[1]);
+                int mapWidth = Integer.parseInt(dimensions[0]);
                 ArrayList<String> mapStrings = new ArrayList<>();
-                for (int i = 1; i <= mapHeight; i++) {
-                    mapStrings.add(file.get(i));
+                if (file.size() >= mapHeight) {
+                    String regex = "[ZRBGS]{" + mapWidth + "}";
+                    for (int i = 1; i <= mapHeight; i++) {
+                        if (file.get(i).matches(regex)) {
+                            mapStrings.add(file.get(i));
+                        } else {
+                            throw new IllegalArgumentException("FIle format error");
+                        }
+                    }
+                    return mapStrings;
+                } else {
+                    throw new IllegalArgumentException("Map height longer than file");
                 }
-                return mapStrings;
+            } else {
+                throw new IllegalArgumentException("Map width / height did not match formatting");
             }
-            return null;
         }
 
         private ArrayList<String> parseCityStrings(ArrayList<String> file) {
@@ -95,16 +107,25 @@ public class WereldLaderImpl implements WereldLader {
             if (isStringInt(file.get(mapHeight + 2 + ammountOfCities))) {
                 int marktAmmount = Integer.parseInt(file.get(mapHeight + 2 + ammountOfCities));
                 ArrayList<String> marketStrings = new ArrayList<>();
-                for (int i = mapHeight + 3 + ammountOfCities; i < mapHeight + 3 + ammountOfCities + marktAmmount; i++) {
-                    marketStrings.add(file.get(i));
+                if (file.size() >= mapHeight + 3 + ammountOfCities + marktAmmount) {
+                    for (int i = mapHeight + 3 + ammountOfCities; i < mapHeight + 3 + ammountOfCities + marktAmmount; i++) {
+                        marketStrings.add(file.get(i));
+                    }
+                    return marketStrings;
+                } else {
+                    throw new IllegalArgumentException("Map format error");
                 }
-                return marketStrings;
             }
             return null;
         }
 
         private Kaart getKaart() {
-            Kaart kaart = new Kaart(mapStrings.get(0).length(), mapStrings.size());
+            Kaart kaart;
+            if (mapStrings.size() > 0) {
+                kaart = new Kaart(mapStrings.get(0).length(), mapStrings.size());
+            } else {
+                kaart = new Kaart(0, 0);
+            }
             for (int y = 0; y < mapStrings.size(); y++) {
                 for (int x = 0; x < mapStrings.get(y).length(); x++) {
                     new Terrein(kaart, Coordinaat.op(x, y), new TerreinTypeParser().parse(mapStrings.get(y).charAt(x)));
@@ -146,8 +167,10 @@ public class WereldLaderImpl implements WereldLader {
                         return new Handel(stad, handelType, new Handelswaar(parts[2]), Integer.parseInt(parts[3]));
                     }
                 }
+                throw new IllegalArgumentException("Stad " + parts[0] + " not found");
+            } else {
+                throw new IllegalArgumentException("Handel formatting error: " + string);
             }
-            return null;
         }
 
         private boolean isStringInt(String string) {
