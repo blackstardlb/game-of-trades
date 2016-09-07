@@ -109,7 +109,6 @@ public class WereldLaderImpl implements WereldLader {
                     subArray.add(file.get(i));
                 }
 
-                subArray.forEach(System.out::println);
                 if (isStringInt(subArray.get(0))) {
                     int ammountOfMarkets = Integer.parseInt(subArray.get(0));
                     subArray.remove(0);
@@ -204,7 +203,6 @@ public class WereldLaderImpl implements WereldLader {
                         }
                     }
                 }
-                System.out.println(steden);
                 throw new IllegalArgumentException("Handel formatting error: " + string);
             }
 
