@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>io.gameoftrades</OriginalElement>
+  <nodes>
+    <node x="-2836.0" y="1190.0">io.gameoftrades.model.kaart.Kaart</node>
+    <node x="-3372.0" y="681.0">io.gameoftrades.model.kaart.Stad</node>
+    <node x="-3101.0" y="1766.0">io.gameoftrades.ui.KaartDisplay</node>
+    <node x="-3022.0" y="479.0">io.gameoftrades.model.markt.actie.HandelsPositie</node>
+    <node x="-3773.0" y="261.0">io.gameoftrades.model.markt.HandelType</node>
+    <node x="-2495.0" y="3427.0">io.gameoftrades.model.algoritme.StedenTourAlgoritme</node>
+    <node x="-3297.0" y="1494.0">io.gameoftrades.model.kaart.Terrein</node>
+    <node x="-3733.0" y="3427.0">io.gameoftrades.ui.MainGui</node>
+    <node x="-1971.0" y="38.0">io.gameoftrades.ui.StudentUI</node>
+    <node x="-467.0" y="-719.0">io.gameoftrades.ui.HandelsPositiePanel</node>
+    <node x="-3467.0" y="5.0">io.gameoftrades.model.markt.Handelswaar</node>
+    <node x="-1912.0" y="-760.0">io.gameoftrades.student34.WereldLaderImplTest</node>
+    <node x="-1154.0" y="2806.0">io.gameoftrades.debug.DummyDebugger</node>
+    <node x="-2184.0" y="-550.0">io.gameoftrades.model.lader.WereldLader</node>
+    <node x="-3165.0" y="3427.0">io.gameoftrades.model.algoritme.HandelsplanAlgoritme</node>
+    <node x="-2639.0" y="-179.0">io.gameoftrades.model.Handelaar</node>
+    <node x="-2261.0" y="1333.0">io.gameoftrades.model.markt.Markt</node>
+    <node x="-1935.0" y="769.0">io.gameoftrades.ui.PlanDebugPanel</node>
+    <node x="-3517.0" y="3427.0">io.gameoftrades.ProjectSanityTest</node>
+    <node x="-108.0" y="-760.0">io.gameoftrades.ui.HandelsPositiePanel.LabelValue</node>
+    <node x="-4000.0" y="1356.0">io.gameoftrades.model.kaart.Richting</node>
+    <node x="-2195.0" y="3427.0">io.gameoftrades.ui.LabelPanel</node>
+    <node x="-2497.0" y="134.0">io.gameoftrades.student34.HandelaarImplTest</node>
+    <node x="-3628.0" y="726.0">io.gameoftrades.model.markt.actie.KoopActie</node>
+    <node x="-1886.0" y="2654.0">io.gameoftrades.debug.Debugger.PlanControl</node>
+    <node x="-1648.0" y="2644.0">io.gameoftrades.debug.Debugger</node>
+    <node x="-2491.0" y="1295.0">io.gameoftrades.model.markt.Handelsplan</node>
+    <node x="-1500.0" y="2156.0">io.gameoftrades.ui.AbstractDebugPanel.GuiDebugger</node>
+    <node x="-3928.0" y="1041.0">io.gameoftrades.model.markt.actie.StopActie</node>
+    <node x="-3881.0" y="725.0">io.gameoftrades.model.markt.actie.VerkoopActie</node>
+    <node x="-3343.0" y="886.0">io.gameoftrades.model.markt.actie.BeweegActie</node>
+    <node x="-2046.0" y="1062.0">io.gameoftrades.ui.SnelstePadDebugPanel</node>
+    <node x="-3720.0" y="1283.0">io.gameoftrades.model.markt.actie.NavigeerActie</node>
+    <node x="-3698.0" y="990.0">io.gameoftrades.model.markt.actie.Actie</node>
+    <node x="-3591.0" y="320.0">io.gameoftrades.model.markt.Handel</node>
+    <node x="-3085.0" y="1293.0">io.gameoftrades.model.kaart.Pad</node>
+    <node x="-3695.0" y="1617.0">io.gameoftrades.model.kaart.TerreinType</node>
+    <node x="-2107.0" y="-358.0">io.gameoftrades.student34.WereldLaderImpl</node>
+    <node x="-1922.0" y="3427.0">io.gameoftrades.debug.Debuggable</node>
+    <node x="95.0" y="-760.0">io.gameoftrades.util.Assert</node>
+    <node x="-1771.0" y="3109.0">io.gameoftrades.debug.AsciiArtDebugger</node>
+    <node x="-1720.0" y="1465.0">io.gameoftrades.ui.AbstractDebugPanel</node>
+    <node x="-4000.0" y="3427.0">io.gameoftrades.util.HandelaarScanner</node>
+    <node x="-2318.0" y="1025.0">io.gameoftrades.model.Wereld</node>
+    <node x="-2288.0" y="-127.0">io.gameoftrades.student34.HandelaarImpl</node>
+    <node x="-3408.0" y="1179.0">io.gameoftrades.model.kaart.Coordinaat</node>
+    <node x="-2825.0" y="3427.0">io.gameoftrades.model.algoritme.SnelstePadAlgoritme</node>
+    <node x="-768.0" y="-530.0">io.gameoftrades.ui.HandelsPositieListener</node>
+    <node x="-2194.0" y="1516.0">io.gameoftrades.ui.TspDebugPanel</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="io.gameoftrades.model.markt.actie.NavigeerActie" target="io.gameoftrades.model.kaart.Richting">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.KaartDisplay" target="io.gameoftrades.model.kaart.Coordinaat">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.BeweegActie" target="io.gameoftrades.model.kaart.Stad">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.HandelaarImplTest" target="io.gameoftrades.student34.HandelaarImpl">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.HandelaarImpl" target="io.gameoftrades.model.Handelaar">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.WereldLaderImplTest" target="io.gameoftrades.student34.WereldLaderImpl">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.WereldLaderImplTest" target="io.gameoftrades.model.lader.WereldLader">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.debug.Debugger.PlanControl" target="io.gameoftrades.debug.Debugger">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.Wereld" target="io.gameoftrades.model.markt.Markt">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.BeweegActie" target="io.gameoftrades.model.kaart.Kaart">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.HandelsPositiePanel" target="io.gameoftrades.ui.HandelsPositieListener">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.AbstractDebugPanel" target="io.gameoftrades.ui.AbstractDebugPanel.GuiDebugger">
+      <point x="4.900981976421917" y="-0.9901392158620865" />
+      <point x="4.900981976421917" y="-0.9901392158619728" />
+    </edge>
+    <edge source="io.gameoftrades.ui.TspDebugPanel" target="io.gameoftrades.ui.AbstractDebugPanel">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.kaart.Stad" target="io.gameoftrades.model.kaart.Coordinaat">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.NavigeerActie" target="io.gameoftrades.model.markt.actie.Actie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.kaart.Terrein" target="io.gameoftrades.model.kaart.TerreinType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.SnelstePadDebugPanel" target="io.gameoftrades.ui.AbstractDebugPanel">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.kaart.Terrein" target="io.gameoftrades.model.kaart.Coordinaat">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.VerkoopActie" target="io.gameoftrades.model.markt.Handel">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.BeweegActie" target="io.gameoftrades.model.markt.actie.Actie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.StopActie" target="io.gameoftrades.model.markt.actie.Actie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.WereldLaderImpl" target="io.gameoftrades.model.lader.WereldLader">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.HandelsPositiePanel" target="io.gameoftrades.ui.HandelsPositiePanel.LabelValue">
+      <point x="0.0" y="-5.281783654172841" />
+      <point x="0.0" y="-5.281783654173296" />
+    </edge>
+    <edge source="io.gameoftrades.ui.TspDebugPanel" target="io.gameoftrades.model.Wereld">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.KaartDisplay" target="io.gameoftrades.debug.Debugger.PlanControl">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.HandelsPositie" target="io.gameoftrades.model.kaart.Stad">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.StudentUI" target="io.gameoftrades.student34.HandelaarImpl">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.AbstractDebugPanel.GuiDebugger" target="io.gameoftrades.ui.AbstractDebugPanel">
+      <point x="-5.10101855511266" y="0.0" />
+      <point x="-5.101018555112432" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.HandelaarImplTest" target="io.gameoftrades.model.markt.actie.HandelsPositie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.debug.AsciiArtDebugger" target="io.gameoftrades.debug.Debugger">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.KaartDisplay" target="io.gameoftrades.model.markt.actie.HandelsPositie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.HandelaarImplTest" target="io.gameoftrades.model.Handelaar">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.Handel" target="io.gameoftrades.model.markt.Handelswaar">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.debug.DummyDebugger" target="io.gameoftrades.debug.Debugger">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.Wereld" target="io.gameoftrades.model.kaart.Kaart">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.SnelstePadDebugPanel" target="io.gameoftrades.model.Wereld">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.student34.HandelaarImpl" target="io.gameoftrades.student34.WereldLaderImpl">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.kaart.Kaart" target="io.gameoftrades.model.kaart.Terrein">
+      <point x="2.7028554231465733" y="4.206491716569417" />
+      <point x="2.702855423146616" y="4.206491716569417" />
+    </edge>
+    <edge source="io.gameoftrades.ui.KaartDisplay" target="io.gameoftrades.model.kaart.Pad">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.KoopActie" target="io.gameoftrades.model.markt.actie.Actie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.Handel" target="io.gameoftrades.model.markt.HandelType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.KoopActie" target="io.gameoftrades.model.markt.Handel">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.Handel" target="io.gameoftrades.model.kaart.Stad">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.PlanDebugPanel" target="io.gameoftrades.ui.AbstractDebugPanel">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.AbstractDebugPanel" target="io.gameoftrades.ui.KaartDisplay">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.KaartDisplay" target="io.gameoftrades.model.markt.Handelsplan">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.PlanDebugPanel" target="io.gameoftrades.model.Wereld">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.kaart.Terrein" target="io.gameoftrades.model.kaart.Kaart">
+      <point x="0.0" y="-5.9431948722315155" />
+      <point x="0.0" y="-5.943194872231572" />
+    </edge>
+    <edge source="io.gameoftrades.ui.HandelsPositiePanel.LabelValue" target="io.gameoftrades.ui.HandelsPositiePanel">
+      <point x="1.6113189890215835" y="4.73324953025076" />
+      <point x="1.6113189890215835" y="4.73324953025076" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.BeweegActie" target="io.gameoftrades.model.kaart.Pad">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.NavigeerActie" target="io.gameoftrades.model.kaart.Coordinaat">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.HandelsPositie" target="io.gameoftrades.model.kaart.Coordinaat">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.KaartDisplay" target="io.gameoftrades.model.kaart.Kaart">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.VerkoopActie" target="io.gameoftrades.model.markt.actie.Actie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.model.markt.actie.HandelsPositie" target="io.gameoftrades.model.Wereld">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="io.gameoftrades.ui.AbstractDebugPanel.GuiDebugger" target="io.gameoftrades.debug.Debugger">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.1317614424410541" x="-1853.5" y="1393.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Inner Classes</Category>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
