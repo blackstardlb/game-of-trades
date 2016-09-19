@@ -37,6 +37,7 @@ public class WereldLaderImpl implements WereldLader {
             kaart = parseMapStrings(file).getKaart();
             cities = parseCityStrings(file).getCities();
             market = parseMarketStrings(file).getMarket();
+            //cities.add(new Stad(Coordinaat.op(16, 6), "MyStad"));
         }
 
         Wereld getWereld() {
@@ -172,7 +173,7 @@ public class WereldLaderImpl implements WereldLader {
             private Stad parseStad(String string) {
                 String[] parts = string.split(",");
                 if (parts.length == 3 && isStringInt(parts[0]) && isStringInt(parts[1])) {
-                    return new Stad(Coordinaat.op(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), parts[2]);
+                    return new Stad(Coordinaat.op(Integer.parseInt(parts[0]) - 1, Integer.parseInt(parts[1]) - 1), parts[2]);
                 }
                 throw new IllegalArgumentException("City format error" + string);
             }
