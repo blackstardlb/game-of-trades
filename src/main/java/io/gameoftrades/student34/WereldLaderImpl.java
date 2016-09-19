@@ -109,7 +109,6 @@ public class WereldLaderImpl implements WereldLader {
                     subArray.add(file.get(i));
                 }
 
-                subArray.forEach(System.out::println);
                 if (isStringInt(subArray.get(0))) {
                     int ammountOfMarkets = Integer.parseInt(subArray.get(0));
                     subArray.remove(0);
@@ -173,7 +172,11 @@ public class WereldLaderImpl implements WereldLader {
             private Stad parseStad(String string) {
                 String[] parts = string.split(",");
                 if (parts.length == 3 && isStringInt(parts[0]) && isStringInt(parts[1])) {
-                    return new Stad(Coordinaat.op(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])), parts[2]);
+                    int x = Integer.parseInt(parts[0]) - 1;
+                    int y = Integer.parseInt(parts[1]) - 1;
+                    if (x >= 0 && y >= 0) {
+                        return new Stad(Coordinaat.op(x, y), parts[2]);
+                    }
                 }
                 throw new IllegalArgumentException("City format error" + string);
             }
@@ -204,7 +207,6 @@ public class WereldLaderImpl implements WereldLader {
                         }
                     }
                 }
-                System.out.println(steden);
                 throw new IllegalArgumentException("Handel formatting error: " + string);
             }
 
