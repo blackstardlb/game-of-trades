@@ -27,7 +27,7 @@ import io.gameoftrades.model.markt.actie.HandelsPositie;
 
 /**
  * Een verzameling eenvoudige tests om te kijken of de handelaar werkt.
- * 
+ * <p>
  * Breid deze uit en of maak je eigen oplossing specifieke tests.
  */
 public class HandelaarImplTest {
@@ -52,7 +52,7 @@ public class HandelaarImplTest {
     public void zouEenPadMoetenVinden() {
         Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/voorbeeld-kaart.txt");
         assertNotNull(wereld);
-        
+
         Kaart kaart = wereld.getKaart();
         Stad van = wereld.getSteden().get(0);
         Stad naar = wereld.getSteden().get(1);
@@ -98,9 +98,9 @@ public class HandelaarImplTest {
     public void zouEenHandelsplanMoetenMaken() {
         Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/voorbeeld-kaart.txt");
         assertNotNull(wereld);
-        
+
         Stad startStad = wereld.getSteden().get(0);
-        
+
         HandelsplanAlgoritme algoritme = handelaar.nieuwHandelsplanAlgoritme();
         Handelsplan plan = algoritme.bereken(wereld, new HandelsPositie(wereld, startStad, 150, 10, 50));
 
