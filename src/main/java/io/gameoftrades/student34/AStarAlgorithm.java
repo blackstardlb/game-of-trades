@@ -1,16 +1,16 @@
 package io.gameoftrades.student34;
 
-import io.gameoftrades.debug.AsciiArtDebugger;
 import io.gameoftrades.debug.Debuggable;
 import io.gameoftrades.debug.Debugger;
 import io.gameoftrades.debug.DummyDebugger;
 import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.kaart.*;
-import io.gameoftrades.student34.heuristic.DiagonalHeuristic;
 import io.gameoftrades.student34.heuristic.Heuristic;
 import io.gameoftrades.student34.heuristic.ManhattanHeuristic;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
     private Heuristic heuristic = new ManhattanHeuristic();
@@ -22,29 +22,11 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
         PriorityQueue<Node> openList = new PriorityQueue<>();
         List<Node> closedList = new ArrayList<>();
         openList.add(new Node(start, start, eind, kaart, null, heuristic));
-        List<Coordinaat> fixed = new ArrayList<>();
 
         Node currentNode = null;
         while (!openList.isEmpty()) {
-            Map<Coordinaat, Double> openMap = new HashMap<>();
-            for (Node node : openList) {
-                openMap.put(node.getCoordinaat(), node.getfWaarde());
-            }
-
-            Map<Coordinaat, Double> closedMap = new HashMap<>();
-            for (Node node : closedList) {
-                closedMap.put(node.getCoordinaat(), node.getfWaarde());
-            }
-
-            this.debug.debugCoordinaten(kaart, openMap, closedMap);
-            //System.out.println(openList.peek());
-
             currentNode = openList.poll();
             closedList.add(currentNode);
-
-            if (currentNode.getParentNode() != null) {
-                //this.debug.debugPad(kaart, start, new MyPad(currentNode));
-            }
 
             if (currentNode.getCoordinaat().equals(eind)) {
                 break;
@@ -58,29 +40,37 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
                 if (!openList.contains(neighbour)) {
                     openList.add(neighbour);
                 } else {
-                    for (Node original : openList) {
-                        if (original.equals(neighbour)) {
-                            if (neighbour.getgWaarde() < original.getgWaarde()) {
-                                if (true) {
-                                    System.out.println("Copy found:" + neighbour);
-                                    System.out.println("Original found:" + original);
-
-                                    original.setParentNode(neighbour.getParentNode());
-                                    System.out.println("Fixed :" + original);
-                                    fixed.add(original.getCoordinaat());
-                                }
-                            }
-                            break;
-                        }
+                    Node original = openList.stream().filter(node1 -> node1.equals(neighbour)).collect(Collectors.toList()).get(0);
+                    if (original.getPath().getTotaleTijd() > neighbour.getPath().getTotaleTijd()) {
+                        openList.remove(original);
+                        openList.add(neighbour);
                     }
                 }
             }
         }
-        //this.debug.debugCoordinaten(kaart, fixed);
-        Pad pad = new MyPad(currentNode);
-        System.out.println("TotalTijd: " + pad.getTotaleTijd());
-        this.debug.debugPad(kaart, start, pad);
+        Pad pad = null;
+        if (currentNode != null) {
+            pad = currentNode.getPath();
+            System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
+            System.out.println("TotalTijd: " + pad.getTotaleTijd());
+            this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
+            this.debug.debugPad(kaart, start, pad);
+        }
         return pad;
+    }
+
+    private void deBugOpenCloseLists(Collection<Node> openList, Collection<Node> closedList, Kaart kaart, Function<Node, Double> function) {
+        Map<Coordinaat, Double> openMap = openList.stream().collect(Collectors.toMap(Node::getCoordinaat, function));
+
+        Map<Coordinaat, Double> closedMap = closedList.stream().collect(Collectors.toMap(Node::getCoordinaat, function));
+
+        this.debug.debugCoordinaten(kaart, openMap, closedMap);
+    }
+
+    private void deBugCurrentPath(Node currentNode, Kaart kaart, Coordinaat start) {
+        if (currentNode != null && currentNode.getParentNode() != null) {
+            this.debug.debugPad(kaart, start, new MyPad(currentNode));
+        }
     }
 
     @Override
@@ -97,7 +87,6 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
 class Node implements Comparable<Node> {
     private final Coordinaat coordinaat;
     private final double hWaarde;
-    private double gWaarde;
     private Node parentNode;
     private final Kaart kaart;
     private final Coordinaat coordinaatStart;
@@ -113,7 +102,6 @@ class Node implements Comparable<Node> {
         this.coordinaatStart = coordinaatStart;
         this.coordinaatEind = coordinaatEind;
         hWaarde = berekenHWaarde();
-        gWaarde = berekenGWaarde();
     }
 
     public boolean isTraversable() {
@@ -148,25 +136,12 @@ class Node implements Comparable<Node> {
         }
     }
 
-    private double hWaardepervlakteMethod() {
-        int cost = 0;
-        int minx = Math.min(coordinaat.getX(), coordinaatEind.getX());
-        int miny = Math.min(coordinaat.getY(), coordinaatEind.getY());
-
-        int maxx = Math.max(coordinaat.getX(), coordinaatEind.getX());
-        int maxy = Math.max(coordinaat.getY(), coordinaatEind.getY());
-
-        int count = 0;
-        for (int x = minx; x < maxx; x++) {
-            for (int y = miny; y < maxy; y++) {
-                TerreinType terreinType = kaart.getTerreinOp(Coordinaat.op(x, y)).getTerreinType();
-                if (terreinType.isToegankelijk()) {
-                    cost += terreinType.getBewegingspunten();
-                }
-                count++;
-            }
+    public Pad getPath() {
+        if (parentNode != null) {
+            return new MyPad(this);
+        } else {
+            return null;
         }
-        return (cost * 1.000 / count * 1.000) * 10;
     }
 
     public Coordinaat getCoordinaat() {
@@ -178,11 +153,11 @@ class Node implements Comparable<Node> {
     }
 
     public double getgWaarde() {
-        return gWaarde;
+        return berekenGWaarde();
     }
 
     public double getfWaarde() {
-        return hWaarde + gWaarde;
+        return hWaarde + getgWaarde();
     }
 
     public Node getParentNode() {
@@ -191,7 +166,6 @@ class Node implements Comparable<Node> {
 
     public void setParentNode(Node parentNode) {
         this.parentNode = parentNode;
-        this.gWaarde = berekenGWaarde();
     }
 
     @Override
@@ -219,7 +193,7 @@ class Node implements Comparable<Node> {
                 "coordinaat=" + coordinaat +
                 ", fWaarde=" + getfWaarde() +
                 ", hWaarde=" + hWaarde +
-                ", gWaarde=" + gWaarde +
+                ", gWaarde=" + getgWaarde() +
                 ", parentNode=" + (parentNode == null ? null : parentNode.getCoordinaat()) +
                 '}';
     }
