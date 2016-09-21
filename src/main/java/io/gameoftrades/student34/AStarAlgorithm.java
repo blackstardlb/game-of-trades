@@ -3,19 +3,25 @@ package io.gameoftrades.student34;
 import io.gameoftrades.debug.AsciiArtDebugger;
 import io.gameoftrades.debug.Debuggable;
 import io.gameoftrades.debug.Debugger;
+import io.gameoftrades.debug.DummyDebugger;
 import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.kaart.*;
+import io.gameoftrades.student34.heuristic.DiagonalHeuristic;
+import io.gameoftrades.student34.heuristic.Heuristic;
+import io.gameoftrades.student34.heuristic.ManhattanHeuristic;
 
 import java.util.*;
 
 public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
-    private Debugger debug = new AsciiArtDebugger();
+    private Heuristic heuristic = new ManhattanHeuristic();
+
+    private Debugger debug = new DummyDebugger();
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
         PriorityQueue<Node> openList = new PriorityQueue<>();
         List<Node> closedList = new ArrayList<>();
-        openList.add(new Node(start, start, eind, kaart, null));
+        openList.add(new Node(start, start, eind, kaart, null, heuristic));
         List<Coordinaat> fixed = new ArrayList<>();
 
         Node currentNode = null;
@@ -30,7 +36,7 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
                 closedMap.put(node.getCoordinaat(), node.getfWaarde());
             }
 
-            //this.debug.debugCoordinaten(kaart, openMap, closedMap);
+            this.debug.debugCoordinaten(kaart, openMap, closedMap);
             //System.out.println(openList.peek());
 
             currentNode = openList.poll();
@@ -79,65 +85,12 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
 
     @Override
     public String toString() {
-        return "A* Algorithm";
+        return "A* Algorithm with " + this.heuristic;
     }
 
     @Override
     public void setDebugger(Debugger debugger) {
         this.debug = debugger;
-    }
-}
-
-class MyPad implements Pad {
-    private Richting[] richtingen;
-    private int totaleTijd = 0;
-
-    public MyPad(Node eindNode) {
-        Stack<Node> nodes = new Stack<>();
-        Node currentNode = eindNode;
-        while (currentNode != null) {
-            nodes.add(currentNode);
-            currentNode = currentNode.getParentNode();
-        }
-
-        richtingen = new Richting[nodes.size() - 1];
-
-        for (int i = 0; i < richtingen.length; i++) {
-            Node pop = nodes.pop();
-            Node peek = nodes.peek();
-            richtingen[i] = Richting.tussen(pop.getCoordinaat(), peek.getCoordinaat());
-            totaleTijd += peek.getTerreinType().getBewegingspunten();
-        }
-    }
-
-    public MyPad(Richting[] richtingen) {
-        this.richtingen = richtingen;
-    }
-
-    @Override
-    public int getTotaleTijd() {
-        return totaleTijd;
-    }
-
-    @Override
-    public Richting[] getBewegingen() {
-        return richtingen;
-    }
-
-    @Override
-    public Pad omgekeerd() {
-        System.out.println("Omgekeerd");
-        Richting[] omgekeerd = new Richting[this.richtingen.length];
-        for (int i = 0; i < omgekeerd.length; i++) {
-            omgekeerd[i] = richtingen[i].omgekeerd();
-        }
-        return new MyPad(omgekeerd);
-    }
-
-    @Override
-    public Coordinaat volg(Coordinaat start) {
-        System.out.println("Volg");
-        return null;
     }
 }
 
@@ -149,9 +102,11 @@ class Node implements Comparable<Node> {
     private final Kaart kaart;
     private final Coordinaat coordinaatStart;
     private final Coordinaat coordinaatEind;
+    private Heuristic heuristic;
 
 
-    public Node(Coordinaat coordinaat, Coordinaat coordinaatStart, Coordinaat coordinaatEind, Kaart kaart, Node parentNode) {
+    public Node(Coordinaat coordinaat, Coordinaat coordinaatStart, Coordinaat coordinaatEind, Kaart kaart, Node parentNode, Heuristic heuristic) {
+        this.heuristic = heuristic;
         this.coordinaat = coordinaat;
         this.kaart = kaart;
         this.parentNode = parentNode;
@@ -162,11 +117,11 @@ class Node implements Comparable<Node> {
     }
 
     public boolean isTraversable() {
-        return getTerreinType().isToegankelijk();
+        return getTerrein().getTerreinType().isToegankelijk();
     }
 
-    public TerreinType getTerreinType() {
-        return kaart.getTerreinOp(coordinaat).getTerreinType();
+    public Terrein getTerrein() {
+        return kaart.getTerreinOp(coordinaat);
     }
 
     public List<Node> getNeighbours() {
@@ -174,18 +129,18 @@ class Node implements Comparable<Node> {
         Terrein currentTerrein = kaart.getTerreinOp(coordinaat);
         for (Richting richting : currentTerrein.getMogelijkeRichtingen()) {
             Terrein kijk = kaart.kijk(currentTerrein, richting);
-            neighbours.add(new Node(kijk.getCoordinaat(), coordinaatStart, coordinaatEind, kaart, this));
+            neighbours.add(new Node(kijk.getCoordinaat(), coordinaatStart, coordinaatEind, kaart, this, heuristic));
         }
         return neighbours;
     }
 
     private double berekenHWaarde() {
-        return (calDistanceBetween2Points(coordinaatEind, coordinaat)) * (getTerreinType().getBewegingspunten());
+        return heuristic.berekenH(getTerrein(), coordinaatEind);
     }
 
     private double berekenGWaarde() {
         if (parentNode != null) {
-            double cost = getTerreinType().getBewegingspunten();
+            double cost = getTerrein().getTerreinType().getBewegingspunten();
             cost += parentNode.getgWaarde();
             return cost;
         } else {
@@ -212,10 +167,6 @@ class Node implements Comparable<Node> {
             }
         }
         return (cost * 1.000 / count * 1.000) * 10;
-    }
-
-    private double calDistanceBetween2Points(Coordinaat coordinaat1, Coordinaat coordinaat2) {
-        return coordinaat1.afstandTot(coordinaat2);
     }
 
     public Coordinaat getCoordinaat() {
