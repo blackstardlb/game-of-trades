@@ -5,6 +5,7 @@ import io.gameoftrades.model.algoritme.HandelsplanAlgoritme;
 import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.algoritme.StedenTourAlgoritme;
 import io.gameoftrades.model.lader.WereldLader;
+import io.gameoftrades.student34.algorithms.AStar.AStarAlgorithm;
 
 /**
  * Welkom bij Game of Trades!

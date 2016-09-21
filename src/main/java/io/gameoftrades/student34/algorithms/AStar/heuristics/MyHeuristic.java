@@ -1,4 +1,4 @@
-package io.gameoftrades.student34.heuristic;
+package io.gameoftrades.student34.algorithms.AStar.heuristics;
 
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Terrein;

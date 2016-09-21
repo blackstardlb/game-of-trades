@@ -3,11 +3,12 @@ package io.gameoftrades.student34;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Richting;
+import io.gameoftrades.student34.algorithms.AStar.Node;
 
 import java.util.Stack;
 
 public class MyPad implements Pad {
-    private Richting[] richtingen;
+    private final Richting[] richtingen;
     private int totaleTijd = 0;
 
     public MyPad(Node eindNode) {
@@ -28,8 +29,9 @@ public class MyPad implements Pad {
         }
     }
 
-    public MyPad(Richting[] richtingen) {
+    public MyPad(Richting[] richtingen, int totaleTijd) {
         this.richtingen = richtingen;
+        this.totaleTijd = totaleTijd;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class MyPad implements Pad {
         for (int i = 0; i < omgekeerd.length; i++) {
             omgekeerd[i] = richtingen[i].omgekeerd();
         }
-        return new MyPad(omgekeerd);
+        return new MyPad(omgekeerd, getTotaleTijd());
     }
 
     @Override
