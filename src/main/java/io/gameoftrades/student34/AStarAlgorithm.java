@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
     private Heuristic heuristic = new ManhattanHeuristic();
-
     private Debugger debug = new DummyDebugger();
 
     @Override
@@ -37,14 +36,15 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
                     continue;
                 }
 
-                if (!openList.contains(neighbour)) {
-                    openList.add(neighbour);
-                } else {
-                    Node original = openList.stream().filter(node1 -> node1.equals(neighbour)).collect(Collectors.toList()).get(0);
+                Optional<Node> nodeOptional = openList.stream().filter(node -> node.equals(neighbour)).findAny();
+                if (nodeOptional.isPresent()) {
+                    Node original = nodeOptional.get();
                     if (original.getPath().getTotaleTijd() > neighbour.getPath().getTotaleTijd()) {
                         openList.remove(original);
                         openList.add(neighbour);
                     }
+                } else {
+                    openList.add(neighbour);
                 }
             }
         }
@@ -52,7 +52,7 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
         if (currentNode != null) {
             pad = currentNode.getPath();
             System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
-            System.out.println("TotalTijd: " + pad.getTotaleTijd());
+            System.out.println("TotaleTijd: " + pad.getTotaleTijd());
             this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
             this.debug.debugPad(kaart, start, pad);
         }
