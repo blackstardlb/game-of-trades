@@ -8,6 +8,7 @@ import io.gameoftrades.model.kaart.*;
 import io.gameoftrades.student34.MyPad;
 import io.gameoftrades.student34.algorithms.AStar.heuristics.Heuristic;
 import io.gameoftrades.student34.algorithms.AStar.heuristics.ManhattanHeuristic;
+import io.gameoftrades.ui.AbstractDebugPanel;
 
 import java.util.*;
 import java.util.function.Function;
@@ -19,13 +20,14 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
+        long startmillis = System.currentTimeMillis();
         PriorityQueue<Node> openList = new PriorityQueue<>();
         List<Node> closedList = new ArrayList<>();
         openList.add(new Node(kaart.getTerreinOp(start), eind, kaart, null, heuristic));
 
         Node currentNode = null;
         while (!openList.isEmpty()) {
-            //this.deBugCurrentPath(openList.peek(), kaart, start);
+            this.deBugCurrentPath(openList.peek(), kaart, start);
             currentNode = openList.poll();
             closedList.add(currentNode);
 
@@ -56,6 +58,7 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
             pad = currentNode.getPath();
             System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
             System.out.println("TotaleTijd: " + pad.getTotaleTijd());
+            System.out.println("Millis: " + (System.currentTimeMillis() - startmillis));
             this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
             this.debug.debugPad(kaart, start, pad);
         }
