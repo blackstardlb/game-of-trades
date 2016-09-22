@@ -3,7 +3,7 @@ package io.gameoftrades.student34;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Richting;
-import io.gameoftrades.student34.algorithms.AStar.Node;
+import io.gameoftrades.student34.algorithms.astar.Node;
 
 import java.util.Stack;
 

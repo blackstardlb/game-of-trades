@@ -1,14 +1,15 @@
-package io.gameoftrades.student34.algorithms.AStar;
+package io.gameoftrades.student34.algorithms.astar;
 
 import io.gameoftrades.debug.Debuggable;
 import io.gameoftrades.debug.Debugger;
 import io.gameoftrades.debug.DummyDebugger;
 import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
-import io.gameoftrades.model.kaart.*;
+import io.gameoftrades.model.kaart.Coordinaat;
+import io.gameoftrades.model.kaart.Kaart;
+import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.student34.MyPad;
-import io.gameoftrades.student34.algorithms.AStar.heuristics.Heuristic;
-import io.gameoftrades.student34.algorithms.AStar.heuristics.ManhattanHeuristic;
-import io.gameoftrades.ui.AbstractDebugPanel;
+import io.gameoftrades.student34.algorithms.astar.heuristics.Heuristic;
+import io.gameoftrades.student34.algorithms.astar.heuristics.ManhattanHeuristic;
 
 import java.util.*;
 import java.util.function.Function;

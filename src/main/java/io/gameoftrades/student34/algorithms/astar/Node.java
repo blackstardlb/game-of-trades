@@ -1,8 +1,8 @@
-package io.gameoftrades.student34.algorithms.AStar;
+package io.gameoftrades.student34.algorithms.astar;
 
 import io.gameoftrades.model.kaart.*;
 import io.gameoftrades.student34.MyPad;
-import io.gameoftrades.student34.algorithms.AStar.heuristics.Heuristic;
+import io.gameoftrades.student34.algorithms.astar.heuristics.Heuristic;
 
 import java.util.ArrayList;
 import java.util.List;
