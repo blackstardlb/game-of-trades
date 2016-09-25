@@ -20,7 +20,7 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
 
     @Override
     public List<Stad> bereken(Kaart kaart, List<Stad> steden) {
-        return optimiseSeveralTimes(kaart, steden);
+        return optimiseStadList(kaart, steden);
     }
 
     private List<Stad> optimiseSeveralTimes(Kaart kaart, List<Stad> steden) {
@@ -87,7 +87,7 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
                 List<Stad> newRoute = twoOptSwap(steden, i, k);
                 int newDistance = getCost(kaart, newRoute);
                 if (newDistance < bestDistance) {
-//                    this.debugger.debugSteden(kaart, newRoute);
+                    this.debugger.debugSteden(kaart, newRoute);
                     return newRoute;
                 }
             }
@@ -180,9 +180,7 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
         public int hashCode() {
             int result = 17;
             result = result * 37 + Math.max(x.hashCode(), y.hashCode());
-            result = result * 37 + Math.min(x.hashCode(), y.hashCode());
-            return result;
+            return result * 37 + Math.min(x.hashCode(), y.hashCode());
         }
-
     }
 }
