@@ -20,7 +20,7 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
 
     @Override
     public List<Stad> bereken(Kaart kaart, List<Stad> steden) {
-        return optimiseStadList(kaart, steden);
+        return optimiseSeveralTimes(kaart, steden);
     }
 
     private List<Stad> optimiseSeveralTimes(Kaart kaart, List<Stad> steden) {
@@ -33,7 +33,8 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
         List<Stad> worst = new ArrayList<>();
         worst.addAll(steden);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < steden.size(); i++) {
+            Collections.shuffle(randomList);
             List<Stad> optimiseStadList = this.optimiseStadList(kaart, randomList);
 //            this.debugger.debugSteden(kaart, optimiseStadList);
             if (getCost(kaart, optimiseStadList) < getCost(kaart, best)) {
@@ -41,14 +42,12 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
             } else if (getCost(kaart, optimiseStadList) > getCost(kaart, worst)) {
                 worst = optimiseStadList;
             }
-
-            Collections.shuffle(randomList, new Random(System.currentTimeMillis()));
         }
 
         System.out.println("Min Time: " + getCost(kaart, best));
         System.out.println("Max Time: " + getCost(kaart, worst));
         this.debugger.debugSteden(kaart, best);
-//        this.debugger.debugPad(kaart, best.get(0).getCoordinaat(), this.createPad(kaart, best));
+        this.debugger.debugPad(kaart, best.get(0).getCoordinaat(), this.createPad(kaart, best));
         return best;
     }
 
@@ -63,6 +62,7 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
                 toReturn = temp;
             }
         }
+//        this.debugger.debugPad(kaart, toReturn.get(0).getCoordinaat(), this.createPad(kaart, toReturn));
         return toReturn;
     }
 
