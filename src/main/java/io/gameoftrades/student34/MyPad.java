@@ -5,24 +5,19 @@ import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Richting;
 import io.gameoftrades.student34.algorithms.astar.Node;
 
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class MyPad implements Pad {
     private final Richting[] richtingen;
     private int totaleTijd = 0;
 
     public MyPad(Node eindNode) {
-        Stack<Node> nodes = new Stack<>();
-        Node currentNode = eindNode;
-        while (currentNode != null) {
-            nodes.add(currentNode);
-            currentNode = currentNode.getParentNode();
-        }
-
+        Queue<Node> nodes = new LinkedList<>(eindNode.getNodePath());
         richtingen = new Richting[nodes.size() - 1];
 
         for (int i = 0; i < richtingen.length; i++) {
-            Node pop = nodes.pop();
+            Node pop = nodes.poll();
             Node peek = nodes.peek();
             richtingen[i] = Richting.tussen(pop.getCoordinaat(), peek.getCoordinaat());
             totaleTijd += peek.getTerrein().getTerreinType().getBewegingspunten();

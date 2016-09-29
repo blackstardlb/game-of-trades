@@ -56,6 +56,7 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
 
         Pad pad = null;
         if (currentNode != null) {
+            System.out.println(currentNode.getNodePath());
             pad = currentNode.getPath();
             /*System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
             System.out.println("TotaleTijd: " + pad.getTotaleTijd());
