@@ -8,11 +8,11 @@ import io.gameoftrades.student34.algorithms.astar.Node;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class MyPad implements Pad {
+public class PadImpl implements Pad {
     private final Richting[] richtingen;
     private int totaleTijd = 0;
 
-    public MyPad(Node eindNode) {
+    public PadImpl(Node eindNode) {
         Queue<Node> nodes = new LinkedList<>(eindNode.getNodePath());
         richtingen = new Richting[nodes.size() - 1];
 
@@ -24,7 +24,7 @@ public class MyPad implements Pad {
         }
     }
 
-    public MyPad(Richting[] richtingen, int totaleTijd) {
+    public PadImpl(Richting[] richtingen, int totaleTijd) {
         this.richtingen = richtingen;
         this.totaleTijd = totaleTijd;
     }
@@ -45,7 +45,7 @@ public class MyPad implements Pad {
         for (int i = 0; i < omgekeerd.length; i++) {
             omgekeerd[i] = richtingen[i].omgekeerd();
         }
-        return new MyPad(omgekeerd, getTotaleTijd());
+        return new PadImpl(omgekeerd, getTotaleTijd());
     }
 
     @Override

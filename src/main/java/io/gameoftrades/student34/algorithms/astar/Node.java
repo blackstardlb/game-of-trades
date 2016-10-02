@@ -1,11 +1,13 @@
 package io.gameoftrades.student34.algorithms.astar;
 
 import io.gameoftrades.model.kaart.*;
-import io.gameoftrades.student34.MyPad;
+import io.gameoftrades.student34.PadImpl;
 import io.gameoftrades.student34.algorithms.astar.heuristics.Heuristic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Node implements Comparable<Node> {
     private final Terrein terrein;
@@ -32,17 +34,15 @@ public class Node implements Comparable<Node> {
     }
 
     public List<Node> getNeighbours(Coordinaat coordinaatEind) {
-        List<Node> neighbours = new ArrayList<>();
-
-        for (Richting richting : terrein.getMogelijkeRichtingen()) {
-            Terrein kijk = kaart.kijk(terrein, richting);
-            neighbours.add(new Node(kijk, coordinaatEind, kaart, this, heuristic));
-        }
+        List<Node> neighbours =
+                Arrays.stream(terrein.getMogelijkeRichtingen())
+                        .map(richting -> new Node(kaart.kijk(terrein, richting), coordinaatEind, kaart, this, heuristic))
+                        .collect(Collectors.toList());
         return neighbours;
     }
 
     public Pad getPath() {
-        return new MyPad(this);
+        return new PadImpl(this);
     }
 
     public Coordinaat getCoordinaat() {
@@ -55,9 +55,7 @@ public class Node implements Comparable<Node> {
 
     public double getgWaarde() {
         if (parentNode != null) {
-            double cost = getTerrein().getTerreinType().getBewegingspunten();
-            cost += parentNode.getgWaarde();
-            return cost;
+            return getTerrein().getTerreinType().getBewegingspunten() + parentNode.getgWaarde();
         } else {
             return 0;
         }
@@ -110,7 +108,7 @@ public class Node implements Comparable<Node> {
                 ", fWaarde=" + getfWaarde() +
                 ", hWaarde=" + hWaarde +
                 ", gWaarde=" + getgWaarde() +
-                ", parentNode=" + (parentNode == null ? null : parentNode.getTerrein()) +
+                ", parentNode=" + (parentNode == null ? null : parentNode.getTerrein().getCoordinaat()) +
                 '}';
     }
 }

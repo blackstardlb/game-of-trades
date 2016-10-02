@@ -7,7 +7,7 @@ import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Kaart;
 import io.gameoftrades.model.kaart.Pad;
-import io.gameoftrades.student34.MyPad;
+import io.gameoftrades.student34.PadImpl;
 import io.gameoftrades.student34.algorithms.astar.heuristics.Heuristic;
 import io.gameoftrades.student34.algorithms.astar.heuristics.ManhattanHeuristic;
 
@@ -26,14 +26,22 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
         List<Node> closedList = new ArrayList<>();
         openList.add(new Node(kaart.getTerreinOp(start), eind, kaart, null, heuristic));
 
-        Node currentNode = null;
+        Node currentNode;
         while (!openList.isEmpty()) {
             this.deBugCurrentPath(openList.peek(), kaart, start);
             currentNode = openList.poll();
             closedList.add(currentNode);
 
             if (currentNode.getCoordinaat().equals(eind)) {
-                break;
+                Pad pad = currentNode.getPath();
+                /*
+                    System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
+                    System.out.println("TotaleTijd: " + pad.getTotaleTijd());
+                    System.out.println("Millis: " + (System.currentTimeMillis() - startmillis));
+                */
+                this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
+                this.debug.debugPad(kaart, start, pad);
+                return pad;
             }
 
             for (Node neighbour : currentNode.getNeighbours(eind)) {
@@ -54,17 +62,7 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
             }
         }
 
-        Pad pad = null;
-        if (currentNode != null) {
-            System.out.println(currentNode.getNodePath());
-            pad = currentNode.getPath();
-            /*System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
-            System.out.println("TotaleTijd: " + pad.getTotaleTijd());
-            System.out.println("Millis: " + (System.currentTimeMillis() - startmillis));*/
-            this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
-            this.debug.debugPad(kaart, start, pad);
-        }
-        return pad;
+        throw new RuntimeException("Path not found between " + start + " and " + eind);
     }
 
     private void deBugOpenCloseLists(Collection<Node> openList, Collection<Node> closedList, Kaart kaart, Function<Node, Double> function) {
@@ -77,7 +75,7 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
 
     private void deBugCurrentPath(Node currentNode, Kaart kaart, Coordinaat start) {
         if (currentNode != null) {
-            this.debug.debugPad(kaart, start, new MyPad(currentNode));
+            this.debug.debugPad(kaart, start, new PadImpl(currentNode));
         }
     }
 
