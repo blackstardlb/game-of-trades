@@ -8,10 +8,15 @@ import io.gameoftrades.model.markt.HandelType;
 import io.gameoftrades.model.markt.Handelswaar;
 import io.gameoftrades.model.markt.Markt;
 
-import java.io.*;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Queue;
 
 public class WereldLaderImpl implements WereldLader {
 
@@ -31,26 +36,26 @@ public class WereldLaderImpl implements WereldLader {
         private Kaart kaart;
         private List<Stad> cities;
         private Markt market;
+        private final Queue<String> file;
 
         WorldParser(String resourceName) {
-            ArrayList<String> file = readWorldFile(resourceName);
-            kaart = parseMapStrings(file).getKaart();
-            cities = parseCityStrings(file).getCities();
-            market = parseMarketStrings(file).getMarket();
-            //cities.add(new Stad(Coordinaat.op(16, 6), "MyStad"));
+            file = readWorldFile(resourceName);
+            kaart = new MapParser().getKaart();
+            cities = new CityParser().getCities();
+            market = new MarketParser().getMarket();
         }
 
         Wereld getWereld() {
             return new Wereld(kaart, cities, market);
         }
 
-        private ArrayList<String> readWorldFile(String name) {
+        private Queue<String> readWorldFile(String name) {
             InputStream is = this.getClass().getResourceAsStream(name);
             try {
                 if (is != null) {
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
                     String line;
-                    ArrayList<String> file = new ArrayList<>();
+                    Queue<String> file = new LinkedList<>();
                     while ((line = br.readLine()) != null) {
                         file.add(line.replaceAll("\\s+$", ""));
                     }
@@ -63,66 +68,14 @@ public class WereldLaderImpl implements WereldLader {
             }
         }
 
-        private MapParser parseMapStrings(ArrayList<String> file) {
-            if (file.get(0).matches("\\d*,\\d*")) { // check if formatting matches: number,number
-                String[] dimensions = file.get(0).split(",");
-                int mapHeight = Integer.parseInt(dimensions[1]);
-                int mapWidth = Integer.parseInt(dimensions[0]);
-                ArrayList<String> mapStrings = new ArrayList<>();
-                if (file.size() >= mapHeight) {
-                    for (int i = 1; i <= mapHeight; i++) {
-                        mapStrings.add(file.get(i));
-                    }
-                    return new MapParser(mapWidth, mapHeight, mapStrings);
+        private int parseIntFromQueue() throws Exception {
+            if (!file.isEmpty()) {
+                String queString = file.poll();
+                if (isStringInt(queString)) {
+                    return Integer.parseInt(queString);
                 }
             }
-            throw new IllegalArgumentException("Map formatting error");
-        }
-
-        private CityParser parseCityStrings(ArrayList<String> file) {
-            if (file.size() >= kaart.getHoogte() + 1) {
-                ArrayList<String> subArray = new ArrayList<>();
-
-                for (int i = kaart.getHoogte() + 1; i < file.size(); i++) {
-                    subArray.add(file.get(i));
-                }
-
-                if (isStringInt(subArray.get(0))) {
-                    int ammountOfCities = Integer.parseInt(subArray.get(0));
-                    subArray.remove(0);
-                    ArrayList<String> cityStrings = new ArrayList<>();
-                    if (subArray.size() >= ammountOfCities) {
-                        for (int i = 0; i < ammountOfCities; i++) {
-                            cityStrings.add(subArray.get(i));
-                        }
-                        return new CityParser(cityStrings);
-                    }
-                }
-            }
-            throw new IllegalArgumentException("City format error");
-        }
-
-        private MarketParser parseMarketStrings(ArrayList<String> file) {
-            if (file.size() >= kaart.getHoogte() + cities.size() + 3) {
-                ArrayList<String> subArray = new ArrayList<>();
-
-                for (int i = kaart.getHoogte() + cities.size() + 2; i < file.size(); i++) {
-                    subArray.add(file.get(i));
-                }
-
-                if (isStringInt(subArray.get(0))) {
-                    int ammountOfMarkets = Integer.parseInt(subArray.get(0));
-                    subArray.remove(0);
-                    ArrayList<String> marketStrings = new ArrayList<>();
-                    if (subArray.size() >= ammountOfMarkets) {
-                        for (int i = 0; i < ammountOfMarkets; i++) {
-                            marketStrings.add(subArray.get(i));
-                        }
-                        return new MarketParser(marketStrings, cities);
-                    }
-                }
-            }
-            throw new IllegalArgumentException("Market format error");
+            throw new Exception();
         }
 
         private boolean isStringInt(String string) {
@@ -132,27 +85,57 @@ public class WereldLaderImpl implements WereldLader {
         private class MapParser {
             private Kaart kaart;
 
-            MapParser(int width, int height, ArrayList<String> mapTerrein) {
-                kaart = new Kaart(width, height);
-                for (String terreinString : mapTerrein) {
-                    checkLineMatchMapFormatting(terreinString, kaart.getBreedte());
+            MapParser() {
+                Dimension dimension = parseMapDimension();
+                kaart = new Kaart((int) dimension.getWidth(), (int) dimension.getHeight());
+                for (int i = 0; i < dimension.getHeight() && !file.isEmpty(); i++) {
+                    String line = file.poll();
+                    checkLineMatchMapFormatting(line, kaart.getBreedte());
+                    this.addTerrein(line, i);
                 }
-                this.addTerrein(mapTerrein);
             }
 
-            private void addTerrein(ArrayList<String> mapTerrein) {
-                for (int y = 0; y < kaart.getHoogte(); y++) {
-                    for (int x = 0; x < kaart.getBreedte(); x++) {
-                        new Terrein(kaart, Coordinaat.op(x, y), new TerreinTypeParser().parse(mapTerrein.get(y).charAt(x)));
+            private Dimension parseMapDimension() {
+                if (!file.isEmpty()) {
+                    String dimensionString = file.poll();
+                    if (dimensionString.matches("\\d*,\\d*")) {
+                        String[] dimensions = dimensionString.split(",");
+                        int mapHeight = Integer.parseInt(dimensions[1]);
+                        int mapWidth = Integer.parseInt(dimensions[0]);
+                        return new Dimension(mapWidth, mapHeight);
                     }
+                }
+                throw new IllegalArgumentException("Map formatting error");
+            }
+
+            private void addTerrein(String line, int yCord) {
+                for (int x = 0; x < kaart.getBreedte(); x++) {
+                    new Terrein(kaart, Coordinaat.op(x, yCord), this.parseTerreinType(line.charAt(x)));
                 }
             }
 
             private void checkLineMatchMapFormatting(String line, int mapWidth) {
-                String regex = "[" + new TerreinTypeParser().getLetters() + "]{" + mapWidth + "}";
+                String regex = "[" + this.getTerreinTypeLetters() + "]{" + mapWidth + "}";
                 if (!line.matches(regex)) {
                     throw new IllegalArgumentException("Line format error: " + line);
                 }
+            }
+
+            private TerreinType parseTerreinType(char terreinChar) {
+                for (TerreinType terreinType : TerreinType.values()) {
+                    if (terreinType.getLetter() == terreinChar) {
+                        return terreinType;
+                    }
+                }
+                throw new IllegalArgumentException("TerreinType met char " + terreinChar + " bestaat niet");
+            }
+
+            private String getTerreinTypeLetters() {
+                StringBuilder sb = new StringBuilder();
+                for (TerreinType terreinType : TerreinType.values()) {
+                    sb.append(terreinType.getLetter());
+                }
+                return sb.toString();
             }
 
             public Kaart getKaart() {
@@ -163,10 +146,20 @@ public class WereldLaderImpl implements WereldLader {
         private class CityParser {
             private List<Stad> cities;
 
-            CityParser(ArrayList<String> cityStrings) {
+            CityParser() {
+                int ammountOfCities = parseAmmountOfCities();
                 cities = new ArrayList<>();
-                for (String cityString : cityStrings) {
-                    cities.add(parseStad(cityString));
+
+                for (int i = 0; i < ammountOfCities && !file.isEmpty(); i++) {
+                    cities.add(parseStad(file.poll()));
+                }
+            }
+
+            private int parseAmmountOfCities() {
+                try {
+                    return parseIntFromQueue();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("City format error");
                 }
             }
 
@@ -190,20 +183,29 @@ public class WereldLaderImpl implements WereldLader {
         private class MarketParser {
             private Markt market;
 
-            MarketParser(ArrayList<String> marketStrings, List<Stad> cities) {
+            MarketParser() {
+                int amountOfMarkets = parseAmmountOfMarkets();
                 List<Handel> handels = new ArrayList<>();
-                for (String string : marketStrings) {
-                    handels.add(getHandel(string, cities));
+                for (int i = 0; i < amountOfMarkets && !file.isEmpty(); i++) {
+                    handels.add(parseHandel(file.poll(), cities));
                 }
                 market = new Markt(handels);
             }
 
-            private Handel getHandel(String string, List<Stad> steden) {
+            private int parseAmmountOfMarkets() {
+                try {
+                    return parseIntFromQueue();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Market format error");
+                }
+            }
+
+            private Handel parseHandel(String string, List<Stad> steden) {
                 String[] parts = string.split(",");
                 if (parts.length == 4 && isStringInt(parts[3])) {
                     for (Stad stad : steden) {
                         if (parts[0].equals(stad.getNaam())) {
-                            HandelType handelType = new HandelTypeParser().parse(parts[1]);
+                            HandelType handelType = this.parseHandelType(parts[1]);
                             return new Handel(stad, handelType, new Handelswaar(parts[2]), Integer.parseInt(parts[3]));
                         }
                     }
@@ -211,39 +213,18 @@ public class WereldLaderImpl implements WereldLader {
                 throw new IllegalArgumentException("Handel formatting error: " + string);
             }
 
-            public Markt getMarket() {
+            private HandelType parseHandelType(String handelTypeString) {
+                for (HandelType handelType : HandelType.values()) {
+                    if (handelType.toString().equals(handelTypeString)) {
+                        return handelType;
+                    }
+                }
+                throw new IllegalArgumentException("HandelType " + handelTypeString + " bestaat niet");
+            }
+
+            Markt getMarket() {
                 return market;
             }
-        }
-    }
-
-    private class HandelTypeParser {
-        HandelType parse(String handelTypeString) {
-            for (HandelType handelType : HandelType.values()) {
-                if (handelType.toString().equals(handelTypeString)) {
-                    return handelType;
-                }
-            }
-            throw new IllegalArgumentException("HandelType " + handelTypeString + " bestaat niet");
-        }
-    }
-
-    private class TerreinTypeParser {
-        TerreinType parse(char terreinChar) {
-            for (TerreinType terreinType : TerreinType.values()) {
-                if (terreinType.getLetter() == terreinChar) {
-                    return terreinType;
-                }
-            }
-            throw new IllegalArgumentException("TerreinType met char " + terreinChar + " bestaat niet");
-        }
-
-        String getLetters() {
-            StringBuilder sb = new StringBuilder();
-            for (TerreinType terreinType : TerreinType.values()) {
-                sb.append(terreinType.getLetter());
-            }
-            return sb.toString();
         }
     }
 }
