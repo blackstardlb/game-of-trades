@@ -16,20 +16,22 @@ import java.util.stream.Collectors;
 public class HandelsPlanAlgorithmFast implements HandelsplanAlgoritme {
 
     private int stepsLeft;
+    private int voorraad;
+    private int geld;
 
     @Override
     public Handelsplan bereken(Wereld wereld, HandelsPositie positie) {
         stepsLeft = positie.getMaxActie();
+        voorraad = positie.getRuimte();
+        geld = positie.getKapitaal();
 
         long start = System.currentTimeMillis();
         Handelsplan handelsplan = new Handelsplan(berekenPlan(wereld, positie.getStad()));
         long end = System.currentTimeMillis();
         System.out.println("Took: " + (end - start) + "ms");
 
-
         return handelsplan;
     }
-
 
     private List<Actie> berekenPlan(Wereld wereld, Stad beginStad) {
         List<Actie> acties = new ArrayList<>();
@@ -37,9 +39,11 @@ public class HandelsPlanAlgorithmFast implements HandelsplanAlgoritme {
         if (vraagAanboden.size() > 0) {
             VraagAanbod beste = vraagAanboden.poll();
             stepsLeft -= beste.getTotalTravelCost();
+            geld = beste.getGeldAfter();
             acties.addAll(beste.getActies());
             acties.addAll(berekenPlan(wereld, beste.getEindStad()));
         }
+        System.out.println(geld);
         return acties;
     }
 
@@ -50,7 +54,7 @@ public class HandelsPlanAlgorithmFast implements HandelsplanAlgoritme {
         for (HandelWrapper aanbodWrapper : alleAanbod) {
             for (Handel vraag : wereld.getMarkt().getVraag()) {
                 if (vraag.getHandelswaar().equals(aanbodWrapper.getHandel().getHandelswaar())) {
-                    VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(), new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper);
+                    VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(), new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper/*, voorraad, geld*/);
                     if (stepsLeft >= vraagAanbod.getTotalTravelCost()) {
                         vraagAanboden.add(vraagAanbod);
                     }

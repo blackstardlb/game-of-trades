@@ -12,6 +12,8 @@ import java.util.List;
 
 public class HandelsPlanAlgorithmAccurate implements HandelsplanAlgoritme {
 
+    private final int segmentSize = 130;
+
     @Override
     public Handelsplan bereken(Wereld wereld, HandelsPositie handelsPositie) {
         long start = System.currentTimeMillis();
@@ -20,7 +22,7 @@ public class HandelsPlanAlgorithmAccurate implements HandelsplanAlgoritme {
         int money = handelsPositie.getKapitaal();
         Stad currentStad = handelsPositie.getStad();
         while (remainingActies > 0) {
-            HandelsPositie clone = new HandelsPositie(wereld, currentStad, money, handelsPositie.getRuimte(), remainingActies > 130 ? 130 : remainingActies);
+            HandelsPositie clone = new HandelsPositie(wereld, currentStad, money, handelsPositie.getRuimte(), remainingActies > segmentSize ? segmentSize : remainingActies);
             Tree tree = new Tree(wereld, clone.getStad(), clone.getMaxActie());
             HandelsRoute best = tree.getBest(clone);
             if (best != null) {

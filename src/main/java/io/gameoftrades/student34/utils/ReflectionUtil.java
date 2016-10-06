@@ -68,7 +68,7 @@ public class ReflectionUtil {
 
     public static <T> T newInstance(Class<T> cls, Class<?>[] parameterTypes, Object[] paremeters) {
         try {
-            Constructor<T> constructor = cls.getConstructor(parameterTypes);
+            Constructor<T> constructor = cls.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
             return constructor.newInstance(paremeters);
         } catch (Exception ex) {

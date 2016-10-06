@@ -11,16 +11,24 @@ import java.util.List;
 public class VraagAanbod implements Comparable<VraagAanbod> {
 
     private final Kaart kaart;
+    private int voorraad;
+    private int geld;
     private final HandelWrapper vraag;
     private final HandelWrapper aanbod;
 
     public VraagAanbod(Kaart kaart, HandelWrapper vraag, HandelWrapper aanbod) {
+        this(kaart, vraag, aanbod, 0, 0);
+    }
+
+    public VraagAanbod(Kaart kaart, HandelWrapper vraag, HandelWrapper aanbod, int voorraad, int geld) {
         if (vraag.getHandel().getHandelType() == aanbod.getHandel().getHandelType()) {
             throw new IllegalArgumentException("Vraag en aanbod mogen niet hetzelfde handeltype hebben");
         }
         this.kaart = kaart;
         this.vraag = vraag;
         this.aanbod = aanbod;
+        this.voorraad = voorraad;
+        this.geld = geld;
     }
 
     public Kaart getKaart() {
@@ -28,11 +36,20 @@ public class VraagAanbod implements Comparable<VraagAanbod> {
     }
 
     private double getCompareWaarde() {
-        return getWinst() / (getTotalTravelCost() * 1.00);
+        return ((double) getWinst() * (Math.max(1, voorraad)) / ((double) getTotalTravelCost()));
     }
 
     private int getWinst() {
-        return vraag.getHandel().getPrijs() - aanbod.getHandel().getPrijs();
+        int aantal = geld > 0 && voorraad > 0 ? Math.min(voorraad, geld / aanbod.getHandel().getPrijs()) : 1;
+        /**System.out.println("Aantal: " + aantal);
+        System.out.println("Inkoopprijs: " + (aanbod.getHandel().getPrijs() * aantal));
+        System.out.println("Winst: " + ((vraag.getHandel().getPrijs() * aantal) - (aanbod.getHandel().getPrijs() * aantal)));
+        System.out.println("");*/
+        return (vraag.getHandel().getPrijs() * aantal) - (aanbod.getHandel().getPrijs() * aantal);
+    }
+
+    public int getGeldAfter() {
+        return geld + getWinst();
     }
 
     public int getTotalTravelCost() {
