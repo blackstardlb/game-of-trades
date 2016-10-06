@@ -54,7 +54,7 @@ public class HandelsPlanAlgorithmFast implements HandelsplanAlgoritme {
         for (HandelWrapper aanbodWrapper : alleAanbod) {
             for (Handel vraag : wereld.getMarkt().getVraag()) {
                 if (vraag.getHandelswaar().equals(aanbodWrapper.getHandel().getHandelswaar())) {
-                    VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(), new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper/*, voorraad, geld*/);
+                    VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(), new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper, voorraad, geld);
                     if (stepsLeft >= vraagAanbod.getTotalTravelCost()) {
                         vraagAanboden.add(vraagAanbod);
                     }

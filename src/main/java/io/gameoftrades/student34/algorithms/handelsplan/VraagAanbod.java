@@ -40,11 +40,7 @@ public class VraagAanbod implements Comparable<VraagAanbod> {
     }
 
     private int getWinst() {
-        int aantal = geld > 0 && voorraad > 0 ? Math.min(voorraad, geld / aanbod.getHandel().getPrijs()) : 1;
-        /**System.out.println("Aantal: " + aantal);
-        System.out.println("Inkoopprijs: " + (aanbod.getHandel().getPrijs() * aantal));
-        System.out.println("Winst: " + ((vraag.getHandel().getPrijs() * aantal) - (aanbod.getHandel().getPrijs() * aantal)));
-        System.out.println("");*/
+        int aantal = voorraad > 0 ? Math.min(voorraad, geld / aanbod.getHandel().getPrijs()) : 1;
         return (vraag.getHandel().getPrijs() * aantal) - (aanbod.getHandel().getPrijs() * aantal);
     }
 
