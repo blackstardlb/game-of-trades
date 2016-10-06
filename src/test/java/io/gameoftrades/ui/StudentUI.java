@@ -1,6 +1,9 @@
 package io.gameoftrades.ui;
 
 import io.gameoftrades.student34.HandelaarImpl;
+import io.gameoftrades.student34.Improvements;
+
+import javax.swing.*;
 
 /**
  * Toont de visuele gebruikersinterface.
@@ -14,6 +17,14 @@ public class StudentUI {
     private static final String VERKEERDECOORDINATEN = "/kaarten/testcases/stad-verkeerde-coordinaten.txt";
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
+                | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
         MainGui.toon(new HandelaarImpl(), WESTEROS);
+        new Improvements().improve();
     }
 }

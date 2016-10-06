@@ -4,7 +4,7 @@
     <groupId>io.gameoftrades</groupId>
     <!-- Change Me -->
     <artifactId>got-team34</artifactId> <!-- got-teamNN -->
-    <!-- --> 
+    <!-- -->
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Game of Trades Student Starter Kit</name>
@@ -49,7 +49,7 @@
         <id>ossrh</id>
         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       </snapshotRepository>
-    </distributionManagement> 
+    </distributionManagement>
 
     <build>
         <plugins>

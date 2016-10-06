@@ -42,8 +42,8 @@ public class PadImpl implements Pad {
     @Override
     public Pad omgekeerd() {
         Richting[] omgekeerd = new Richting[this.richtingen.length];
-        for (int i = 0; i < omgekeerd.length; i++) {
-            omgekeerd[i] = richtingen[i].omgekeerd();
+        for (int i = omgekeerd.length - 1; i >= 0; i--) {
+            omgekeerd[(omgekeerd.length - 1) - i] = richtingen[i].omgekeerd();
         }
         return new PadImpl(omgekeerd, getTotaleTijd());
     }

@@ -14,7 +14,7 @@ public class DoubleMapKey<T> {
     public boolean equals(Object o) {
         if (o != null && o instanceof DoubleMapKey) {
             DoubleMapKey key = (DoubleMapKey) o;
-            return (this.x.equals(key.x) && this.y.equals(key.y)) || (this.y.equals(key.x) && this.x.equals(key.y));
+            return (this.x.equals(key.x) && this.y.equals(key.y));
         } else {
             return false;
         }
@@ -23,7 +23,7 @@ public class DoubleMapKey<T> {
     @Override
     public int hashCode() {
         int result = 17;
-        result = result * 37 + Math.max(x.hashCode(), y.hashCode());
-        return result * 37 + Math.min(x.hashCode(), y.hashCode());
+        result = result * 37 + x.hashCode();
+        return result * 37 + y.hashCode();
     }
 }

@@ -6,7 +6,8 @@ import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.algoritme.StedenTourAlgoritme;
 import io.gameoftrades.model.lader.WereldLader;
 import io.gameoftrades.student34.algorithms.astar.AStarAlgorithm;
-import io.gameoftrades.student34.algorithms.handelsplan.HandelsPlanAlgorithm;
+import io.gameoftrades.student34.algorithms.handelsplan.HandelsPlanAlgorithmAccurate;
+import io.gameoftrades.student34.algorithms.handelsplan.HandelsPlanAlgorithmFast;
 import io.gameoftrades.student34.algorithms.stedentour.StedenTourAlgorithm;
 
 /**
@@ -50,6 +51,6 @@ public class HandelaarImpl implements Handelaar {
      */
     @Override
     public HandelsplanAlgoritme nieuwHandelsplanAlgoritme() {
-        return new HandelsPlanAlgorithm();
+        return new HandelsPlanAlgorithmAccurate();
     }
 }

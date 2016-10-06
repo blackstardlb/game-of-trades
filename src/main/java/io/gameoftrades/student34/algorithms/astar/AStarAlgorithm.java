@@ -21,7 +21,7 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
-//        long startmillis = System.currentTimeMillis();
+//      long startmillis = System.currentTimeMillis();
         PriorityQueue<Node> openList = new PriorityQueue<>();
         List<Node> closedList = new ArrayList<>();
         openList.add(new Node(kaart.getTerreinOp(start), eind, kaart, null, heuristic));
@@ -34,11 +34,10 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
 
             if (currentNode.getCoordinaat().equals(eind)) {
                 Pad pad = currentNode.getPath();
-                /*
-                    System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
-                    System.out.println("TotaleTijd: " + pad.getTotaleTijd());
-                    System.out.println("Millis: " + (System.currentTimeMillis() - startmillis));
-                */
+
+                // System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
+                //System.out.println("TotaleTijd: " + pad.getTotaleTijd());
+                //    System.out.println("Millis: " + (System.currentTimeMillis() - startmillis));
                 this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
                 this.debug.debugPad(kaart, start, pad);
                 return pad;
