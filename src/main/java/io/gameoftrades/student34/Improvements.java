@@ -29,7 +29,7 @@ public class Improvements {
                                         String text = ((textField.getText() != null ? textField.getText() : ""));
                                         if (textField.getSelectedText() != null) {
                                             text = text.substring(0, Math.max(0, textField.getSelectionStart()))
-                                                    + text.substring(Math.max(0, textField.getSelectionEnd()), Math.max(0, text.length()));
+                                                   + text.substring(Math.max(0, textField.getSelectionEnd()), Math.max(0, text.length()));
                                         }
                                         if (!(text + e.getKeyChar()).matches("\\d+")) {
                                             e.consume();

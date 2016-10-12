@@ -7,39 +7,49 @@ import io.gameoftrades.model.algoritme.SnelstePadAlgoritme;
 import io.gameoftrades.model.kaart.Coordinaat;
 import io.gameoftrades.model.kaart.Kaart;
 import io.gameoftrades.model.kaart.Pad;
+import io.gameoftrades.model.kaart.Richting;
+import io.gameoftrades.student34.NullPad;
 import io.gameoftrades.student34.PadImpl;
 import io.gameoftrades.student34.algorithms.astar.heuristics.Heuristic;
 import io.gameoftrades.student34.algorithms.astar.heuristics.ManhattanHeuristic;
+import io.gameoftrades.student34.notification.NotificationCentre;
+import io.gameoftrades.student34.notification.NotificationType;
 
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
+
     private Heuristic heuristic = new ManhattanHeuristic();
     private Debugger debug = new DummyDebugger();
+    private final boolean moetDebuggen;
+
+    public AStarAlgorithm(boolean moetDebuggen) {
+        this.moetDebuggen = moetDebuggen;
+    }
 
     @Override
     public Pad bereken(Kaart kaart, Coordinaat start, Coordinaat eind) {
-//      long startmillis = System.currentTimeMillis();
         PriorityQueue<Node> openList = new PriorityQueue<>();
         List<Node> closedList = new ArrayList<>();
         openList.add(new Node(kaart.getTerreinOp(start), eind, kaart, null, heuristic));
 
         Node currentNode;
         while (!openList.isEmpty()) {
-            this.deBugCurrentPath(openList.peek(), kaart, start);
+            if (moetDebuggen) {
+                this.deBugCurrentPath(openList.peek(), kaart, start);
+            }
             currentNode = openList.poll();
             closedList.add(currentNode);
 
             if (currentNode.getCoordinaat().equals(eind)) {
                 Pad pad = currentNode.getPath();
 
-                // System.out.println("Nodes Evaluated: " + (openList.size() + closedList.size()) + " of " + (kaart.getBreedte() * kaart.getHoogte()));
-                //System.out.println("TotaleTijd: " + pad.getTotaleTijd());
-                //    System.out.println("Millis: " + (System.currentTimeMillis() - startmillis));
-                this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
-                this.debug.debugPad(kaart, start, pad);
+                if (moetDebuggen) {
+                    this.deBugOpenCloseLists(openList, closedList, kaart, Node::getfWaarde);
+                }
                 return pad;
             }
 
@@ -61,7 +71,11 @@ public class AStarAlgorithm implements SnelstePadAlgoritme, Debuggable {
             }
         }
 
-        throw new RuntimeException("Path not found between " + start + " and " + eind);
+        if (moetDebuggen) {
+            NotificationCentre.showNotification("Er is geen mogelijke route tussen deze twee steden!", NotificationType.ERROR);
+        }
+        //throw new RuntimeException("Path not found between " + start + " and " + eind);
+        return new NullPad();
     }
 
     private void deBugOpenCloseLists(Collection<Node> openList, Collection<Node> closedList, Kaart kaart, Function<Node, Double> function) {

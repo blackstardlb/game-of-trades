@@ -10,8 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CostCache {
+
     private static final Map<DoubleMapKey<Stad>, Pad> costs = new HashMap<>();
-    private static final SnelstePadAlgoritme snelstePadAlgoritme = new AStarAlgorithm();
+    private static final SnelstePadAlgoritme snelstePadAlgoritme = new AStarAlgorithm(false);
 
     public static Pad getPath(Kaart kaart, Stad stad1, Stad stad2) {
         DoubleMapKey<Stad> key = new DoubleMapKey<>(stad1, stad2);
