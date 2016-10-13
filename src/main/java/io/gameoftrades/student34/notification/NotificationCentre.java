@@ -2,11 +2,13 @@ package io.gameoftrades.student34.notification;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class NotificationCentre {
 
-    private static List<Notification> queue = new ArrayList<Notification>();
+    private static Queue<Notification> queue = new LinkedList<>();
     private volatile static boolean active = false;
 
     public static synchronized void showNotification(String message, NotificationType type) {
@@ -18,12 +20,10 @@ public class NotificationCentre {
 
     protected static void nextNotification(JFrame frame) {
         if (queue.size() > 0 && !active) {
-            Notification notification = queue.get(0);
+            Notification notification = queue.poll();
 
             notification.show(frame);
             active = true;
-
-            queue.remove(0);
         }
     }
 
