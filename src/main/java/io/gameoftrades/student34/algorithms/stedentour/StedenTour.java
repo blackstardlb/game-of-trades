@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StedenTour implements Debuggable {
+
     private List<Stad> steden;
     private Kaart kaart;
     private Debugger debugger = new DummyDebugger();
@@ -95,10 +96,12 @@ public class StedenTour implements Debuggable {
     }
 
     public void deBugPad() {
-        AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
+        AStarAlgorithm aStarAlgorithm = new AStarAlgorithm(false);
         ArrayList<Richting> richtingen = new ArrayList<>();
         for (int i = 0; i < steden.size() - 1; i++) {
-            richtingen.addAll(Arrays.asList(aStarAlgorithm.bereken(kaart, steden.get(i).getCoordinaat(), steden.get(i + 1).getCoordinaat()).getBewegingen()));
+            richtingen.addAll(Arrays
+                    .asList(aStarAlgorithm.bereken(kaart, steden.get(i).getCoordinaat(), steden.get(i + 1).getCoordinaat())
+                            .getBewegingen()));
         }
         this.debugger.debugPad(kaart, steden.get(0).getCoordinaat(), new PadImpl(richtingen.toArray(new Richting[]{}), getCost()));
     }
@@ -110,8 +113,8 @@ public class StedenTour implements Debuggable {
     @Override
     public String toString() {
         return "StedenTour{" +
-                "cost=" + getCost() +
-                ", steden=" + steden +
-                '}';
+               "cost=" + getCost() +
+               ", steden=" + steden +
+               '}';
     }
 }

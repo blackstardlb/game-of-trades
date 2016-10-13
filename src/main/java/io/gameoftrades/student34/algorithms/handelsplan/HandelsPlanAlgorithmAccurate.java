@@ -6,6 +6,8 @@ import io.gameoftrades.model.kaart.Stad;
 import io.gameoftrades.model.markt.Handelsplan;
 import io.gameoftrades.model.markt.actie.Actie;
 import io.gameoftrades.model.markt.actie.HandelsPositie;
+import io.gameoftrades.student34.notification.NotificationCentre;
+import io.gameoftrades.student34.notification.NotificationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,8 @@ public class HandelsPlanAlgorithmAccurate implements HandelsplanAlgoritme {
         int money = handelsPositie.getKapitaal();
         Stad currentStad = handelsPositie.getStad();
         while (remainingActies > 0) {
-            HandelsPositie clone = new HandelsPositie(wereld, currentStad, money, handelsPositie.getRuimte(), remainingActies > segmentSize ? segmentSize : remainingActies);
+            HandelsPositie clone = new HandelsPositie(wereld, currentStad, money, handelsPositie.getRuimte(),
+                    remainingActies > segmentSize ? segmentSize : remainingActies);
             Tree tree = new Tree(wereld, clone.getStad(), clone.getMaxActie());
             HandelsRoute best = tree.getBest(clone);
             if (best != null) {
@@ -34,6 +37,11 @@ public class HandelsPlanAlgorithmAccurate implements HandelsplanAlgoritme {
                 break;
             }
         }
+
+        if (totalActies.size() == 0) {
+            NotificationCentre.showNotification("Er waren geen mogelijke handelsacties gevonden!", NotificationType.ERROR);
+        }
+
         long end = System.currentTimeMillis();
         System.out.println("Took: " + (end - start) + "ms");
 

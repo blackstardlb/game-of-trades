@@ -7,6 +7,10 @@ import io.gameoftrades.model.markt.Handel;
 import io.gameoftrades.model.markt.Handelsplan;
 import io.gameoftrades.model.markt.actie.Actie;
 import io.gameoftrades.model.markt.actie.HandelsPositie;
+import io.gameoftrades.student34.NullPad;
+import io.gameoftrades.student34.algorithms.stedentour.CostCache;
+import io.gameoftrades.student34.notification.NotificationCentre;
+import io.gameoftrades.student34.notification.NotificationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +30,14 @@ public class HandelsPlanAlgorithmFast implements HandelsplanAlgoritme {
         geld = positie.getKapitaal();
 
         long start = System.currentTimeMillis();
-        Handelsplan handelsplan = new Handelsplan(berekenPlan(wereld, positie.getStad()));
+        List<Actie> acties = berekenPlan(wereld, positie.getStad());
+        Handelsplan handelsplan = new Handelsplan(acties);
         long end = System.currentTimeMillis();
         System.out.println("Took: " + (end - start) + "ms");
+
+        if (acties.size() == 0) {
+            NotificationCentre.showNotification("Er waren geen mogelijke handelsacties gevonden!", NotificationType.ERROR);
+        }
 
         return handelsplan;
     }
@@ -43,20 +52,25 @@ public class HandelsPlanAlgorithmFast implements HandelsplanAlgoritme {
             acties.addAll(beste.getActies());
             acties.addAll(berekenPlan(wereld, beste.getEindStad()));
         }
-        System.out.println(geld);
         return acties;
     }
 
 
     private PriorityQueue<VraagAanbod> getVraagEnAanbod(Wereld wereld, Stad beginStad) {
-        PriorityQueue<HandelWrapper> alleAanbod = new PriorityQueue<>(wereld.getMarkt().getAanbod().stream().map(handel -> new HandelWrapper(wereld.getKaart(), handel, beginStad)).collect(Collectors.toList()));
+        PriorityQueue<HandelWrapper> alleAanbod = new PriorityQueue<>(
+                wereld.getMarkt().getAanbod().stream().map(handel -> new HandelWrapper(wereld.getKaart(), handel, beginStad))
+                        .collect(Collectors.toList()));
         PriorityQueue<VraagAanbod> vraagAanboden = new PriorityQueue<>();
         for (HandelWrapper aanbodWrapper : alleAanbod) {
             for (Handel vraag : wereld.getMarkt().getVraag()) {
                 if (vraag.getHandelswaar().equals(aanbodWrapper.getHandel().getHandelswaar())) {
-                    VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(), new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper, voorraad, geld);
-                    if (stepsLeft >= vraagAanbod.getTotalTravelCost()) {
-                        vraagAanboden.add(vraagAanbod);
+                    if (!(CostCache.getPath(wereld.getKaart(), beginStad, aanbodWrapper.getHandel().getStad()) instanceof NullPad)
+                        && !(CostCache.getPath(wereld.getKaart(), aanbodWrapper.getHandel().getStad(), vraag.getStad()) instanceof NullPad)) {
+                        VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(),
+                                new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper, voorraad, geld);
+                        if (stepsLeft >= vraagAanbod.getTotalTravelCost()) {
+                            vraagAanboden.add(vraagAanbod);
+                        }
                     }
                 }
             }

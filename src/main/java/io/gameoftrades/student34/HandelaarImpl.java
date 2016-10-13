@@ -35,7 +35,7 @@ public class HandelaarImpl implements Handelaar {
      */
     @Override
     public SnelstePadAlgoritme nieuwSnelstePadAlgoritme() {
-        return new AStarAlgorithm();
+        return new AStarAlgorithm(true);
     }
 
     /**

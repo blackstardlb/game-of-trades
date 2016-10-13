@@ -4,6 +4,8 @@ import io.gameoftrades.model.Wereld;
 import io.gameoftrades.model.kaart.Stad;
 import io.gameoftrades.model.markt.Handel;
 import io.gameoftrades.model.markt.actie.HandelsPositie;
+import io.gameoftrades.student34.NullPad;
+import io.gameoftrades.student34.algorithms.stedentour.CostCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +48,20 @@ public class Tree {
     }
 
     private PriorityQueue<VraagAanbod> getVraagEnAanbod(Wereld wereld, Stad beginStad) {
-        PriorityQueue<HandelWrapper> alleAanbod = new PriorityQueue<>(wereld.getMarkt().getAanbod().stream().map(handel -> new HandelWrapper(wereld.getKaart(), handel, beginStad)).collect(Collectors.toList()));
+        PriorityQueue<HandelWrapper> alleAanbod = new PriorityQueue<>(
+                wereld.getMarkt().getAanbod().stream().map(handel -> new HandelWrapper(wereld.getKaart(), handel, beginStad))
+                        .collect(Collectors.toList()));
         PriorityQueue<VraagAanbod> vraagAanboden = new PriorityQueue<>();
         for (HandelWrapper aanbodWrapper : alleAanbod) {
             for (Handel vraag : wereld.getMarkt().getVraag()) {
                 if (vraag.getHandelswaar().equals(aanbodWrapper.getHandel().getHandelswaar())) {
-                    VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(), new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper);
-                    if (actionsLeft - vraagAanbod.getTotalTravelCost() >= 0) {
-                        vraagAanboden.add(vraagAanbod);
+                    if (!(CostCache.getPath(wereld.getKaart(), beginStad, aanbodWrapper.getHandel().getStad()) instanceof NullPad)
+                        && !(CostCache.getPath(wereld.getKaart(), aanbodWrapper.getHandel().getStad(), vraag.getStad()) instanceof NullPad)) {
+                        VraagAanbod vraagAanbod = new VraagAanbod(wereld.getKaart(),
+                                new HandelWrapper(wereld.getKaart(), vraag, aanbodWrapper.getHandel().getStad()), aanbodWrapper);
+                        if (actionsLeft - vraagAanbod.getTotalTravelCost() >= 0) {
+                            vraagAanboden.add(vraagAanbod);
+                        }
                     }
                 }
             }
@@ -87,8 +95,9 @@ public class Tree {
         for (Tree child : children) {
             if (child.isLeaf()) {
                 HandelsRoute route = child.getRoute(handelsPositie);
-                if (route.getVraagAanboden().size() > 0)
+                if (route.getVraagAanboden().size() > 0) {
                     leaves.add(route);
+                }
             } else {
                 leaves.addAll(child.getAllLeaves(handelsPositie));
             }
@@ -107,10 +116,10 @@ public class Tree {
     @Override
     public String toString() {
         return "Tree{" +
-                "currentStad=" + currentStad.getNaam() +
-                ", parent=" + (parent != null ? parent.getCurrentStad().getNaam() : "null") +
-                ", actionsLeft=" + actionsLeft +
-                ", currentVraagAanbod=" + (currentVraagAanbod != null ? currentVraagAanbod : "null") +
-                '}';
+               "currentStad=" + currentStad.getNaam() +
+               ", parent=" + (parent != null ? parent.getCurrentStad().getNaam() : "null") +
+               ", actionsLeft=" + actionsLeft +
+               ", currentVraagAanbod=" + (currentVraagAanbod != null ? currentVraagAanbod : "null") +
+               '}';
     }
 }
