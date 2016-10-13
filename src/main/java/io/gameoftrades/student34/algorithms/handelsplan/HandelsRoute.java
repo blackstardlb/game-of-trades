@@ -17,7 +17,7 @@ public class HandelsRoute implements Comparable<HandelsRoute> {
     public HandelsRoute(List<VraagAanbod> vraagAanboden, HandelsPositie handelsPositie) {
         this.vraagAanboden = vraagAanboden;
         this.handelsPositie = cloneHandelsPositie(handelsPositie);
-        vraagAanboden.stream().forEach(vraagAanbod -> vraagAanbod.getActies().stream().forEach(actie -> {
+        vraagAanboden.forEach(vraagAanbod -> vraagAanbod.getActies().forEach(actie -> {
             if (actie.isMogelijk(HandelsRoute.this.handelsPositie) || (actie instanceof KoopActie || actie instanceof VerkoopActie)) {
                 HandelsRoute.this.handelsPositie = actie.voerUit(HandelsRoute.this.handelsPositie);
             }
@@ -30,7 +30,7 @@ public class HandelsRoute implements Comparable<HandelsRoute> {
 
     public List<Actie> getActies() {
         List<Actie> acties = new ArrayList<>();
-        vraagAanboden.stream().forEach(vraagAanbod -> acties.addAll(vraagAanbod.getActies()));
+        vraagAanboden.forEach(vraagAanbod -> acties.addAll(vraagAanbod.getActies()));
         return acties;
     }
 

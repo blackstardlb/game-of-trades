@@ -32,10 +32,6 @@ public class HandelWrapper implements Comparable<HandelWrapper> {
         return travelCost;
     }
 
-    public double getCompareWaarde() {
-        return compareWaarde;
-    }
-
     @Override
     public int compareTo(HandelWrapper o) {
         if (handel.getHandelType() != o.handel.getHandelType()) {
