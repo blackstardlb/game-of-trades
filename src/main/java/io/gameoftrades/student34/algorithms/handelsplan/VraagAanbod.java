@@ -57,18 +57,6 @@ public class VraagAanbod implements Comparable<VraagAanbod> {
         return Double.compare(o.getCompareWaarde(), getCompareWaarde());
     }
 
-    public HandelWrapper getAanbod() {
-        return aanbod;
-    }
-
-    public HandelWrapper getVraag() {
-        return vraag;
-    }
-
-    public Stad getBeginStad() {
-        return aanbod.getBeginStad();
-    }
-
     public Stad getEindStad() {
         return vraag.getHandel().getStad();
     }

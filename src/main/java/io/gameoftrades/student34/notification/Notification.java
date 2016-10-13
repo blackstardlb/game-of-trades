@@ -23,14 +23,6 @@ public class Notification {
 		this.notificationType = notificationType;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-
-	public NotificationType getNotificationType() {
-		return notificationType;
-	}
-
 	public void show(JFrame frame) {
 		if (timer == null) {
 			JPanel glass = (JPanel) frame.getGlassPane();
