@@ -24,7 +24,7 @@ public class StudentUI {
             e.printStackTrace();
         }
 
-        MainGui.toon(new HandelaarImpl(), VOORBEELD);
+        MainGui.toon(new HandelaarImpl(), WESTEROS);
         new Improvements().improve();
     }
 }
