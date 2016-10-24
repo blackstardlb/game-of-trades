@@ -67,19 +67,11 @@ public class Node implements Comparable<Node> {
 
     public List<Node> getNodePath() {
         ArrayList<Node> nodes = new ArrayList<>();
-        getNodePath(this, nodes);
-        return nodes;
-    }
-
-    private void getNodePath(Node startNode, List<Node> nodes) {
-        if (startNode != null) {
-            getNodePath(startNode.getParentNode(), nodes);
-            nodes.add(startNode);
+        if(parentNode!=null) {
+            nodes.addAll(parentNode.getNodePath());
         }
-    }
-
-    public Node getParentNode() {
-        return parentNode;
+        nodes.add(this);
+        return nodes;
     }
 
     @Override

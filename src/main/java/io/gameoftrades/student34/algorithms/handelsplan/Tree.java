@@ -39,14 +39,6 @@ public class Tree {
         return currentStad;
     }
 
-    public List<Tree> getChildren() {
-        return children;
-    }
-
-    public VraagAanbod getCurrentVraagAanbod() {
-        return currentVraagAanbod;
-    }
-
     private PriorityQueue<VraagAanbod> getVraagEnAanbod(Wereld wereld, Stad beginStad) {
         PriorityQueue<HandelWrapper> alleAanbod = new PriorityQueue<>(
                 wereld.getMarkt().getAanbod().stream().map(handel -> new HandelWrapper(wereld.getKaart(), handel, beginStad))
@@ -104,13 +96,6 @@ public class Tree {
         }
 
         return leaves;
-    }
-
-    public void print() {
-        System.out.println(this);
-        for (Tree tree : children) {
-            tree.print();
-        }
     }
 
     @Override

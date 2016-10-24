@@ -22,13 +22,6 @@ public class WereldLaderImpl implements WereldLader {
 
     @Override
     public Wereld laad(String resource) {
-        //
-        // Gebruik this.getClass().getResourceAsStream(resource) om een resource van het classpath te lezen.
-        //
-        // Kijk in src/test/resources voor voorbeeld kaarten.
-        //
-        // TODO Laad de wereld!
-        //
         return new WorldParser(resource).getWereld();
     }
 
@@ -75,7 +68,7 @@ public class WereldLaderImpl implements WereldLader {
                     return Integer.parseInt(queString);
                 }
             }
-            throw new Exception();
+            throw new Exception("Queue is empty or string isn't an integer");
         }
 
         private boolean isStringInt(String string) {
@@ -115,8 +108,7 @@ public class WereldLaderImpl implements WereldLader {
             }
 
             private void checkLineMatchMapFormatting(String line, int mapWidth) {
-                String regex = "[" + this.getTerreinTypeLetters() + "]{" + mapWidth + "}";
-                if (!line.matches(regex)) {
+                if (!line.matches("[" + this.getTerreinTypeLetters() + "]{" + mapWidth + "}")) {
                     throw new IllegalArgumentException("Line format error: " + line);
                 }
             }

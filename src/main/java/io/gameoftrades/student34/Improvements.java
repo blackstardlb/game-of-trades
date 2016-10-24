@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class Improvements {
 
+    @SuppressWarnings("unchecked")
     public void improve() {
         if (Frame.getFrames().length > 0 && Frame.getFrames()[0] instanceof JFrame) {
             JFrame frame = (JFrame) Frame.getFrames()[0];
