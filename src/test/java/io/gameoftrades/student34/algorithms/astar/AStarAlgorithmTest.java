@@ -36,6 +36,17 @@ public class AStarAlgorithmTest {
         assertThat("Reverse pad expected time", expectedTotalTime, equalTo(padReversed.getTotaleTijd()));
     }
 
+    @Test
+    public void berekenZelfdeStad() throws Exception {
+        int expectedTotalTime = 0;
+        Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/voorbeeld-kaart.txt");
+        Stad from = wereld.getSteden().get(0);
+        Stad to = wereld.getSteden().get(0);
+
+        Pad pad = aStarAlgorithm.bereken(wereld.getKaart(), from.getCoordinaat(), to.getCoordinaat());
+        assertThat("NullCheck pad", pad, is(notNullValue()));
+        assertThat("Pad expected time", expectedTotalTime, equalTo(pad.getTotaleTijd()));
+    }
 
     @Before
     public void setUp() throws Exception {
