@@ -38,7 +38,7 @@ public class CostCache {
         costs.clear();
     }
 
-    private static class StadWrapper {
+    public static class StadWrapper {
 
         private final Stad stad;
 
