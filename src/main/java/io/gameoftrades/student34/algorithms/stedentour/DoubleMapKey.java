@@ -1,5 +1,11 @@
 package io.gameoftrades.student34.algorithms.stedentour;
 
+/**
+ * Deze class kan worden gebruikt als key voor bijvoorbeeld een {@link java.util.Map} of een {@link java.util.List}.
+ *
+ * @param <T>
+ * @see CostCache
+ */
 public class DoubleMapKey<T> {
 
     private final T x;
