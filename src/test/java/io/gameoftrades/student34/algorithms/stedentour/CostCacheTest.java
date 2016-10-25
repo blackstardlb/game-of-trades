@@ -22,13 +22,14 @@ public class CostCacheTest {
     @Before
     public void setUp() throws Exception {
         handelaar = new HandelaarImpl();
+        CostCache.clearCache();
     }
 
     @Test
     public void getPath() throws Exception {
-        Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/voorbeeld-kaart.txt");
+        Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/westeros-kaart.txt");
         Stad from = wereld.getSteden().get(0);
-        Stad to = wereld.getSteden().get(1);
+        Stad to = wereld.getSteden().get(wereld.getSteden().size() - 1);
         SnelstePadAlgoritme snelstePadAlgoritme = handelaar.nieuwSnelstePadAlgoritme();
         Pad expected = snelstePadAlgoritme.bereken(wereld.getKaart(), from.getCoordinaat(), to.getCoordinaat());
 
@@ -57,9 +58,9 @@ public class CostCacheTest {
 
     @Test
     public void getCost() throws Exception {
-        Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/voorbeeld-kaart.txt");
+        Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/westeros-kaart.txt");
         Stad from = wereld.getSteden().get(0);
-        Stad to = wereld.getSteden().get(1);
+        Stad to = wereld.getSteden().get(wereld.getSteden().size() - 1);
         SnelstePadAlgoritme snelstePadAlgoritme = handelaar.nieuwSnelstePadAlgoritme();
         int expected = snelstePadAlgoritme.bereken(wereld.getKaart(), from.getCoordinaat(), to.getCoordinaat()).getTotaleTijd();
 
