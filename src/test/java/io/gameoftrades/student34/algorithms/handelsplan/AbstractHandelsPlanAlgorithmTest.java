@@ -1,4 +1,4 @@
-package io.gameoftrades.student34;
+package io.gameoftrades.student34.algorithms.handelsplan;
 
 import io.gameoftrades.model.Wereld;
 import io.gameoftrades.model.algoritme.HandelsplanAlgoritme;
@@ -8,6 +8,7 @@ import io.gameoftrades.model.lader.WereldLader;
 import io.gameoftrades.model.markt.Handel;
 import io.gameoftrades.model.markt.Handelsplan;
 import io.gameoftrades.model.markt.actie.*;
+import io.gameoftrades.student34.HandelaarImpl;
 import io.gameoftrades.student34.utils.ReflectionUtil;
 import org.junit.Before;
 import org.junit.Test;

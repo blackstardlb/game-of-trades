@@ -1,7 +1,6 @@
-package io.gameoftrades.student34;
+package io.gameoftrades.student34.algorithms.handelsplan;
 
 import io.gameoftrades.model.algoritme.HandelsplanAlgoritme;
-import io.gameoftrades.student34.algorithms.handelsplan.HandelsPlanAlgorithmFast;
 
 /**
  * Dit is de test class voor het {@link io.gameoftrades.student34.algorithms.handelsplan.HandelsPlanAlgorithmAccurate}
