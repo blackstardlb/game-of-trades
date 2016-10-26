@@ -34,7 +34,8 @@ public class StedenTourAlgorithmTest {
 
     /**
      *
-     * We doen hier een test waar we testen of de berekende route de meeste geoptimaliseerde route is, de beste stedentour
+     * We doen hier een test waar we testen of de berekende route de meeste geoptimaliseerde route is,
+     * oftewel de beste stedentour
      * @throws Exception
      */
 
@@ -61,7 +62,7 @@ public class StedenTourAlgorithmTest {
 
     /**
      *
-     *
+     * Hier word getest of als er maar één stad aanwezig is in de lijst het programma nog runt
      * @throws Exception
      */
 
@@ -79,6 +80,13 @@ public class StedenTourAlgorithmTest {
         assertThat(expectedArraySize, is(bereken.size()));
         assertThat(expectedStad.getCoordinaat(), is(bereken.get(0).getCoordinaat()));
     }
+
+
+    /**
+     *
+     * Hier wordt getest of als er geen stad in de lijst is het programma nog runned
+     * @throws Exception
+     */
 
     @Test(expected = NullPointerException.class)
     public void geenStad() throws Exception {
