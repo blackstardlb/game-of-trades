@@ -7,12 +7,17 @@ import io.gameoftrades.model.kaart.Pad;
 import io.gameoftrades.model.kaart.Stad;
 import io.gameoftrades.student34.HandelaarImpl;
 import io.gameoftrades.student34.algorithms.astar.AStarAlgorithm;
+import io.gameoftrades.student34.utils.ReflectionUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -82,5 +87,22 @@ public class CostCacheTest {
 
         assertThat("Saved Time", cachedDuration, is(lessThan(calculatedDuration)));
         assertThat("Reverse saved Time", reverseCachedDuration, is(lessThan(calculatedDuration)));
+    }
+
+    @SuppressWarnings("all")
+    @Test
+    public void clearCache() throws Exception {
+        Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/westeros-kaart.txt");
+        Stad from = wereld.getSteden().get(0);
+        Stad to = wereld.getSteden().get(wereld.getSteden().size() - 1);
+
+        CostCache.getCost(wereld.getKaart(), from, to);
+
+        HashMap<DoubleMapKey<CostCache.StadWrapper>, Pad> map = (HashMap<DoubleMapKey<CostCache.StadWrapper>, Pad>) ReflectionUtil.get(CostCache.class, null, "costs");
+        assertThat(map, is(notNullValue()));
+        assertThat("Map is filled", map.size(), is(not(0)));
+        CostCache.clearCache();
+        assertThat("Map is empty", map.size(), is(0));
+
     }
 }

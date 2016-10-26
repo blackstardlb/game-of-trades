@@ -106,7 +106,7 @@ public class CostCache {
      *
      * @see Stad
      */
-    private static class StadWrapper {
+    public static class StadWrapper {
 
         /**
          * De stad die 'ge-wrapped' wordt.
