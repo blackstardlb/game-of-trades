@@ -5,22 +5,32 @@ import io.gameoftrades.debug.Debugger;
 import io.gameoftrades.debug.DummyDebugger;
 import io.gameoftrades.model.algoritme.StedenTourAlgoritme;
 import io.gameoftrades.model.kaart.Kaart;
-import io.gameoftrades.model.kaart.Pad;
-import io.gameoftrades.model.kaart.Richting;
 import io.gameoftrades.model.kaart.Stad;
-import io.gameoftrades.student34.PadImpl;
-import io.gameoftrades.student34.algorithms.astar.AStarAlgorithm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
     private Debugger debugger = new DummyDebugger();
 
+    /**
+     * @param kaart  De kaart de gebruikt zal worden.
+     * @param steden De te sorteren lijst van steden.
+     * @return De optimaal gesoorterd lijst van steden.
+     */
     @Override
     public List<Stad> bereken(Kaart kaart, List<Stad> steden) {
         return optimiseSeveralTimes(kaart, steden).getSteden();
     }
 
+    /**
+     * Deze methode gebruikt de optimiseStadList() methode meerdere keeren returned het beste StedenTour
+     *
+     * @param kaart  De kaart de gebruikt zal worden.
+     * @param steden De te sorteren lijst van steden.
+     * @return De optimaal gesoorterd StedenTour.
+     */
     private StedenTour optimiseSeveralTimes(Kaart kaart, List<Stad> steden) {
         List<Stad> randomList = new ArrayList<>();
         randomList.addAll(steden);
@@ -52,6 +62,11 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
         return best;
     }
 
+    /**
+     * @param kaart  De kaart de gebruikt zal worden.
+     * @param steden De te sorteren lijst van steden.
+     * @return De optimaal gesoorterd StedenTour.
+     */
     private StedenTour optimiseStadList(Kaart kaart, List<Stad> steden) {
         StedenTour stedenTour = new StedenTour(kaart, steden, new DummyDebugger());
         StedenTour stedenTour2;
@@ -70,6 +85,9 @@ public class StedenTourAlgorithm implements StedenTourAlgoritme, Debuggable {
         return this.getClass().getSimpleName();
     }
 
+    /**
+     * @param debugger Set de debugger.
+     */
     @Override
     public void setDebugger(Debugger debugger) {
         this.debugger = debugger;

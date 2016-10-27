@@ -4,13 +4,9 @@ import io.gameoftrades.debug.Debuggable;
 import io.gameoftrades.debug.Debugger;
 import io.gameoftrades.debug.DummyDebugger;
 import io.gameoftrades.model.kaart.Kaart;
-import io.gameoftrades.model.kaart.Richting;
 import io.gameoftrades.model.kaart.Stad;
-import io.gameoftrades.student34.PadImpl;
-import io.gameoftrades.student34.algorithms.astar.AStarAlgorithm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StedenTour implements Debuggable {
@@ -19,12 +15,21 @@ public class StedenTour implements Debuggable {
     private Kaart kaart;
     private Debugger debugger = new DummyDebugger();
 
+
+    /**
+     * @param kaart    De kaart waarbij deze StedenTour behoort.
+     * @param steden   De lijst van steden.
+     * @param debugger De debugger die gebruikt zal worden voor het debuggen van deze StedenTour.
+     */
     public StedenTour(Kaart kaart, List<Stad> steden, Debugger debugger) {
         this.kaart = kaart;
         this.steden = new ArrayList<>(steden);
         this.debugger = debugger;
     }
 
+    /**
+     * @return De cost van de StedenTour.
+     */
     public int getCost() {
         int cost = 0;
         for (int i = 0; i < steden.size() - 1; i++) {
@@ -33,6 +38,15 @@ public class StedenTour implements Debuggable {
         return cost;
     }
 
+    /**
+     * Voeg stad 0 tot i aan de lijst.
+     * Voeg dan stad i tot en met k omgekeerd aan de lijst.
+     * Voeg als laatst de rest van de steden aan de lijst
+     *
+     * @param i de begin stad voor te swappen
+     * @param k de eind stad voor het swappen
+     * @return De nieuwe StedenTour.
+     */
     private StedenTour twoOptSwap(int i, int k) {
         ArrayList<Stad> newRoute = new ArrayList<>();
         for (int y = 0; y < i; y++) {
@@ -49,6 +63,9 @@ public class StedenTour implements Debuggable {
         return new StedenTour(kaart, newRoute, debugger);
     }
 
+    /**
+     * @return De de better / zelfde StedenTour die gevonden is na gebruik te maken van de Two-Opt algorithme.
+     */
     public StedenTour twoOpt() {
         for (int i = 0; i < steden.size() - 1; i++) {
             for (int k = i + 1; k < steden.size(); k++) {
@@ -62,15 +79,24 @@ public class StedenTour implements Debuggable {
         return this;
     }
 
+    /**
+     * @param debugger Set de debugger.
+     */
     @Override
     public void setDebugger(Debugger debugger) {
         this.debugger = debugger;
     }
 
+    /**
+     * Deze methode wordt gebruikt om de stedentour route visuele te debuggen.
+     */
     public void deBug() {
         this.debugger.debugSteden(kaart, steden);
     }
 
+    /**
+     * @return De lijst van steden voor deze stedentour.
+     */
     public List<Stad> getSteden() {
         return steden;
     }
