@@ -98,7 +98,7 @@ public class CostCacheTest {
 
         CostCache.getCost(wereld.getKaart(), from, to);
 
-        HashMap<DoubleMapKey<CostCache.StadWrapper>, Pad> map = (HashMap<DoubleMapKey<CostCache.StadWrapper>, Pad>) ReflectionUtil.get(CostCache.class, null, "costs");
+        HashMap<?, ?> map = (HashMap<?, ?>) ReflectionUtil.get(CostCache.class, null, "costs");
         assertThat(map, is(notNullValue()));
         assertThat("Map is filled", map.size(), is(not(0)));
         CostCache.clearCache();
