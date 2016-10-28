@@ -21,7 +21,13 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
+/**
+ * In deze class wordt de {@link CostCache} class getest
+ *
+ * @see CostCache
+ */
 public class CostCacheTest {
+
     private Handelaar handelaar;
 
     @Before
@@ -30,6 +36,12 @@ public class CostCacheTest {
         CostCache.clearCache();
     }
 
+    /**
+     * Deze test checkt of de cache wel echt werkt door eerst een route op te vragen die nog niet berekend is (dus deze zal worden berekend) en daarna
+     * dezelfde route nog een keer op te vragen en te kijken of het de tweede keer sneller is.
+     *
+     * @throws Exception
+     */
     @Test
     public void getPath() throws Exception {
         Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/westeros-kaart.txt");
@@ -61,6 +73,12 @@ public class CostCacheTest {
         assertThat("Reverse saved Time", reverseCachedDuration, is(lessThan(calculatedDuration)));
     }
 
+    /**
+     * Deze test checkt of de cache wel echt werkt door eerst de cost van een route op te vragen die nog niet berekend is (dus deze zal worden berekend) en daarna
+     * dezelfde cost nog een keer op te vragen en te kijken of het de tweede keer sneller is.
+     *
+     * @throws Exception
+     */
     @Test
     public void getCost() throws Exception {
         Wereld wereld = handelaar.nieuweWereldLader().laad("/kaarten/westeros-kaart.txt");
@@ -89,6 +107,12 @@ public class CostCacheTest {
         assertThat("Reverse saved Time", reverseCachedDuration, is(lessThan(calculatedDuration)));
     }
 
+    /**
+     * Deze test checkt of de {@link CostCache#clearCache()} method werkt door te kijken wat de size van de cache is, daarna de {@link CostCache#clearCache()}
+     * uit te voeren en daarna te kijken of de cache leeg is.
+     *
+     * @throws Exception
+     */
     @SuppressWarnings("all")
     @Test
     public void clearCache() throws Exception {
