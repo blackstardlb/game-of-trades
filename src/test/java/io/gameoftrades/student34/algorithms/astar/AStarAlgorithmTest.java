@@ -16,10 +16,24 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
+/**
+ * Dit is de test class voor het {@link AStarAlgorithm A* algoritme}. We testen hier of onze implementatie wel daadwerkelijk werkt.
+ *
+ * @see io.gameoftrades.model.algoritme.SnelstePadAlgoritme
+ * @see AStarAlgorithm
+ */
 public class AStarAlgorithmTest {
     private Handelaar handelaar;
     private AStarAlgorithm aStarAlgorithm;
 
+    /**
+     * Deze test kijkt of ons {@link AStarAlgorithm A* algoritme} wel daadwerkelijk de snelste route berekent. We hebben hiervoor
+     * berekent wat de snelste route tussen Aberdeen en Birmingham is (deze steden staan in de voorbeeld kaart). Daarna
+     * berekenen we of het berekende aantal stappen van het {@link AStarAlgorithm A* algoritme} overeenkomt met onze
+     * voorberekende getal.
+     *
+     * @throws Exception
+     */
     @Test
     public void bereken() throws Exception {
         int expectedTotalTime = 19;
@@ -36,6 +50,11 @@ public class AStarAlgorithmTest {
         assertThat("Reverse pad expected time", expectedTotalTime, equalTo(padReversed.getTotaleTijd()));
     }
 
+    /**
+     * Met deze test kijken we wat er gebeurt als je de kortste route tussen dezelfde stad probeert te berekenen.
+     *
+     * @throws Exception
+     */
     @Test
     public void berekenZelfdeStad() throws Exception {
         int expectedTotalTime = 0;

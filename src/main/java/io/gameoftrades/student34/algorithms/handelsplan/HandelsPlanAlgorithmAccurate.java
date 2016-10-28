@@ -37,8 +37,11 @@ public class HandelsPlanAlgorithmAccurate implements HandelsplanAlgoritme {
         int money = handelsPositie.getKapitaal();
         Stad currentStad = handelsPositie.getStad();
         while (remainingActies > 0) {
+            // Zorg dat de huidige berekening atlijd de segmentSize als max aantal acties heeft, behalve als
+            // remaningActies kleiner is dan de segmentSize
             HandelsPositie clone = new HandelsPositie(wereld, currentStad, money, handelsPositie.getRuimte(),
                     remainingActies > segmentSize ? segmentSize : remainingActies);
+            // Bereken alle mogelijke routes
             Tree tree = new Tree(wereld, clone.getStad(), clone.getMaxActie());
             HandelsRoute best = tree.getBest(clone);
             if (best != null) {
